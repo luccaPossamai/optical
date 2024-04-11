@@ -1,4 +1,4 @@
-// 1.20.1	2024-03-17T18:02:08.1143803	Recipes
+// 1.20.1	2024-04-11T18:19:19.9604906	Recipes
 4df6a7ffd3e28c9596539ddbd70f78210179cdaa data/create_optical/advancements/recipes/misc/absorption_polarizing_filter.json
 362c81cd0a7a678f90c6bafe0779031bdd9b60d0 data/create_optical/advancements/recipes/misc/encased_mirror.json
 865c1ee5729d01ca273797e782e9ee9373508e72 data/create_optical/advancements/recipes/misc/optical_receptor.json
@@ -11,6 +11,7 @@ c2b74bd74992d33c7ce2255ae073e96c5afeef3e data/create_optical/recipes/optical_rec
 51ff00db1f4899cc70a162bc9e4a4d9a905f0abc data/create_optical/recipes/optical_sensor.json
 d9f8cf2c1194548d83f2f2c3bb1cf93e4a004208 data/create_optical/recipes/optical_source.json
 a31a990bebf1e8ad6b4c8ca8760279f6080dae6f data/create_optical/recipes/polarizing_beam_splitter_block.json
-0809042165566d12370300b43de553c2d2b70844 data/create_optical/recipes/sequenced_assembly/golden_coil.json
-db7376b1daf7cf3841ee16de3d470267b4000cc2 data/create_optical/recipes/sequenced_assembly/mirror_item.json
-26797ac4eb33b5a62cd79613c60794404a36a9bf data/create_optical/recipes/sequenced_assembly/polarizing_filter.json
+b7c6d99cf276af81a4e42a059fb5da05235718a9 data/create_optical/recipes/sequenced_assembly/golden_coil.json
+18d4b1b8df4b7802e73a799d0524c1ec75145ffa data/create_optical/recipes/sequenced_assembly/laser.json
+668a7b06205a598feed5b6aa90ae14197152a2c4 data/create_optical/recipes/sequenced_assembly/mirror_item.json
+15ffdf4d22b5c3a6f106282a85ec7bdad2477ca9 data/create_optical/recipes/sequenced_assembly/polarizing_filter.json

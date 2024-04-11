@@ -84,7 +84,7 @@ public class COBlocks {
             COMod.REGISTRATE.block("optical_sensor", OpticalSensorBlock::new)
                     .initialProperties(() -> Blocks.REPEATER)
                     .blockstate(new OpticalSensorBlockState()::generate)
-                    .addLayer(() -> RenderType::translucent)
+                    .addLayer(() -> RenderType::cutoutMipped)
                     .item()
                     .transform(ModelGen.customItemModel())
                     .register();

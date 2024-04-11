@@ -18,7 +18,8 @@ public class COItems {
     public static final ItemEntry<SequencedAssemblyItem>
             INCOMPLETE_GOLDEN_COIL = sequencedIngredient("incomplete_golden_coil"),
             INCOMPLETE_MIRROR = sequencedIngredient("incomplete_mirror"),
-            INCOMPLETE_POLARIZING_FILTER = sequencedIngredient("incomplete_polarizing_filter");
+            INCOMPLETE_POLARIZING_FILTER = sequencedIngredient("incomplete_polarizing_filter"),
+            INCOMPLETE_LASER = sequencedIngredient("incomplete_laser");
 
     public static final ItemEntry<Item>
             POLARIZING_FILTER = ingredient("polarizing_filter"),

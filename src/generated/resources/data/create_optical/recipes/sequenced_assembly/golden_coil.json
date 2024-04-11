@@ -32,6 +32,24 @@
       ]
     },
     {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_golden_coil"
+        },
+        {
+          "amount": 250,
+          "fluid": "minecraft:lava",
+          "nbt": {}
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_golden_coil"
+        }
+      ]
+    },
+    {
       "type": "create:pressing",
       "ingredients": [
         {

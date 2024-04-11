@@ -4,6 +4,7 @@ import com.google.common.base.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
@@ -18,6 +19,7 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 
 import java.util.function.UnaryOperator;
@@ -26,30 +28,34 @@ public class COSequencedAssemblyRecipeProvider extends CreateRecipeProvider {
 
     GeneratedRecipe
             GOLDEN_COIL = createSequenced("golden_coil", b -> b.require(AllItems.ANDESITE_ALLOY)
-            .transitionTo(COItems.INCOMPLETE_GOLDEN_COIL)
-            .addOutput(COItems.GOLDEN_COIL, 100)
-            .addOutput(AllItems.GOLDEN_SHEET, 10)
-            .loops(10)
-            .addStep(DeployerApplicationRecipe::new, rb -> rb.require(AllItems.GOLDEN_SHEET))
-            .addStep(PressingRecipe::new, rb -> rb)),
+                    .transitionTo(COItems.INCOMPLETE_GOLDEN_COIL)
+                    .addOutput(COItems.GOLDEN_COIL, 100)
+                    .addOutput(AllItems.GOLDEN_SHEET, 10)
+                    .loops(10)
+                    .addStep(DeployerApplicationRecipe::new, rb -> rb.require(AllItems.GOLDEN_SHEET))
+                    .addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 250))
+                    .addStep(PressingRecipe::new, rb -> rb)),
             MIRROR = createSequenced("mirror_item", b -> b.require(Items.GLASS_PANE)
                     .transitionTo(COItems.INCOMPLETE_MIRROR)
                     .addOutput(COItems.MIRROR, 100)
-                    .addStep(PressingRecipe::new, rb -> rb)
+                    .addStep(FillingRecipe::new, rb -> rb.require(Fluids.WATER, 250))
                     .addStep(PressingRecipe::new, rb -> rb)
                     .addStep(PressingRecipe::new, rb -> rb)),
             POLARIZING_FILTER = createSequenced("polarizing_filter", b -> b.require(Items.TINTED_GLASS)
                     .transitionTo(COItems.INCOMPLETE_POLARIZING_FILTER)
                     .addOutput(COItems.POLARIZING_FILTER, 100)
-                    .addStep(PressingRecipe::new, rb -> rb)
+                    .addStep(FillingRecipe::new, rb -> rb.require(Fluids.WATER, 250))
                     .addStep(PressingRecipe::new, rb -> rb)
                     .addStep(PressingRecipe::new, rb -> rb)),
-            /*POLARIZING_FILTER = create("polarizing_filter", b -> b.require(Items.TINTED_GLASS)
-                    .transitionTo(COItems.INCOMPLETE_GOLDEN_COIL)
-                    .addOutput(COItems.POLARIZING_FILTER,1)
-                    .addStep(PressingRecipe::new, rb -> rb));
+            LASER = createSequenced("laser", b -> b.require(AllItems.ANDESITE_ALLOY)
+                    .transitionTo(COItems.INCOMPLETE_LASER)
+                    .addOutput(COItems.LASER, 100)
+                    .loops(5)
+                    .addStep(DeployerApplicationRecipe::new, rb -> rb.require(Items.IRON_INGOT))
+                    .addStep(DeployerApplicationRecipe::new, rb -> rb.require(Items.AMETHYST_SHARD))
+                    .addStep(FillingRecipe::new, rb -> rb.require(Fluids.WATER, 500))
+                    .addStep(PressingRecipe::new, rb -> rb)),
 
-             */
             OPTICAL_SOURCE = viaShaped(COBlocks.OPTICAL_SOURCE::asItem,
                     b -> b.define('C', AllBlocks.COGWHEEL)
                             .define('A', AllBlocks.ANDESITE_CASING)

@@ -4,11 +4,9 @@ import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.ponder.*;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.ui.PonderIndexScreen;
 import com.simibubi.create.foundation.utility.Pointing;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
 
 public class COPonderScenes {
@@ -177,8 +175,8 @@ public class COPonderScenes {
 
     }
 
-    public static void polarization(SceneBuilder scene, SceneBuildingUtil util){
-        scene.title("opticals.polarization_filter", "Polarization Filter");
+    public static void polarizingFilter(SceneBuilder scene, SceneBuildingUtil util){
+        scene.title("opticals.polarizing_filter", "Polarizing Filter");
         scene.configureBasePlate(0, 0, 5);
 
         BlockPos source = util.grid.at(4,1, 2);
@@ -248,8 +246,8 @@ public class COPonderScenes {
         scene.idle(10);
     }
 
-    public static void polarizationCube(SceneBuilder scene, SceneBuildingUtil util){
-        scene.title("opticals.polarization_cube", "Polarization Cube");
+    public static void polarizingCube(SceneBuilder scene, SceneBuildingUtil util){
+        scene.title("opticals.polarizing_cube", "Polarizing Cube");
         scene.configureBasePlate(0, 0, 5);
 
         BlockPos source = util.grid.at(4,1, 3);

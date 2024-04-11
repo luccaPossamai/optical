@@ -40,7 +40,8 @@ public class COCreativeModeTabs {
             List<ItemProviderEntry<?>> excludedItems = List.of(
                     COItems.INCOMPLETE_GOLDEN_COIL,
                     COItems.INCOMPLETE_MIRROR,
-                    COItems.INCOMPLETE_POLARIZING_FILTER
+                    COItems.INCOMPLETE_POLARIZING_FILTER,
+                    COItems.INCOMPLETE_LASER
             );
             for (ItemProviderEntry<?> entry : excludedItems) {
                 exclusions.add(entry.asItem());

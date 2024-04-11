@@ -12,10 +12,15 @@
   ],
   "sequence": [
     {
-      "type": "create:pressing",
+      "type": "create:filling",
       "ingredients": [
         {
           "item": "create_optical:incomplete_mirror"
+        },
+        {
+          "amount": 250,
+          "fluid": "minecraft:water",
+          "nbt": {}
         }
       ],
       "results": [
