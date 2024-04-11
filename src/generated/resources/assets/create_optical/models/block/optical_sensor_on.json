@@ -1,0 +1,6 @@
+{
+  "parent": "create_optical:block/optical_sensor/block",
+  "textures": {
+    "top": "create_optical:block/optical_sensor/sensor_on"
+  }
+}

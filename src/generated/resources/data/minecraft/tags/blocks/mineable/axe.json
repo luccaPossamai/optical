@@ -1,0 +1,9 @@
+{
+  "values": [
+    "create_optical:optical_source",
+    "create_optical:optical_receptor",
+    "create_optical:encased_mirror",
+    "create_optical:absorption_polarizing_filter",
+    "create_optical:polarizing_beam_splitter_block"
+  ]
+}

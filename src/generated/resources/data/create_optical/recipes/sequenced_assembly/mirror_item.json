@@ -1,0 +1,57 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "minecraft:glass_pane"
+  },
+  "loops": 5,
+  "results": [
+    {
+      "chance": 100.0,
+      "item": "create_optical:mirror"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_mirror"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_mirror"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_mirror"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_mirror"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_mirror"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_mirror"
+        }
+      ]
+    }
+  ],
+  "transitionalItem": {
+    "item": "create_optical:incomplete_mirror"
+  }
+}
