@@ -16,11 +16,11 @@ description='''${mod_description}'''
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]
-    modId="create"
-    mandatory=true
-    versionRange="${create_version_range}"
-    ordering="NONE"
-    side="BOTH"
+modId="create"
+mandatory=true
+versionRange="${create_version_range}"
+ordering="NONE"
+side="BOTH"
 [[dependencies.${mod_id}]]
 modId="flywheel"
 mandatory=true
@@ -28,14 +28,14 @@ versionRange="${flywheel_version_range}"
 ordering="AFTER"
 side="CLIENT"
 [[dependencies.${mod_id}]]
-    modId="jei"
-    mandatory=false
-    versionRange="${jei_version_range}"
-    ordering="NONE"
-    side="BOTH"
+modId="jei"
+mandatory=false
+versionRange="${jei_version_range}"
+ordering="NONE"
+side="BOTH"
 [[dependencies.${mod_id}]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="${minecraft_version_range}"
-    ordering="NONE"
-    side="BOTH"
+modId="minecraft"
+mandatory=true
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
