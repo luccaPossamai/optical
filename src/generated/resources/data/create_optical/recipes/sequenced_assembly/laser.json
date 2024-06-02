@@ -1,0 +1,81 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create:andesite_alloy"
+  },
+  "loops": 5,
+  "results": [
+    {
+      "chance": 100.0,
+      "item": "create_optical:laser"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_laser"
+        },
+        {
+          "item": "minecraft:iron_ingot"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_laser"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_laser"
+        },
+        {
+          "item": "minecraft:amethyst_shard"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_laser"
+        }
+      ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_laser"
+        },
+        {
+          "amount": 500,
+          "fluid": "minecraft:water",
+          "nbt": {}
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_laser"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_laser"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_laser"
+        }
+      ]
+    }
+  ],
+  "transitionalItem": {
+    "item": "create_optical:incomplete_laser"
+  }
+}
