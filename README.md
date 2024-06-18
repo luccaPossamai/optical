@@ -19,7 +19,8 @@ Such as:
    
 All the crafts can be found with the JEI mod, and most of the additional mechanics can be found with the ponder(Create Mod) system.
 
-![image](https://github.com/luccaPossamai/optical/assets/110493821/a6460dc2-c734-4718-b4e6-719e0083f9b0)
+![image](https://github.com/luccaPossamai/optical/assets/110493821/d8512c84-1f7e-44d8-8dd8-9ce00b1fdd56)
+
 
 
 
