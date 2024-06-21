@@ -23,6 +23,7 @@
     "#minecraft:coral_plants",
     "#minecraft:saplings",
     "#minecraft:crops",
-    "#minecraft:rails"
+    "#minecraft:rails",
+    "#minecraft:replaceable_by_trees"
   ]
 }
