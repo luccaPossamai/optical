@@ -39,7 +39,7 @@ public class PolarizingBeamSplitterBlock extends HorizontalDirectionalBlock impl
     }
     @Override
     public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, Direction direction, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
-
+        if(direction.getAxis().isVertical()) return;
         float intensity = beamProperties.beamPolarization().getRemainingIntensity(beamProperties.intensity(), BeamHelper.BeamPolarization.VERTICAL);
         if(intensity > 0){
             BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), intensity, BeamHelper.BeamPolarization.VERTICAL, beamProperties.dyeColor());

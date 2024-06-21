@@ -4,6 +4,7 @@ import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -13,7 +14,6 @@ public class EncasedMirrorBlockEntity extends KineticBlockEntity {
 
     public float rotVelocity;
     public float angle;
-    public State state = State.PARALLEL;
     private static final float ANGLE_RANGE = 80F;
 
 
@@ -39,6 +39,7 @@ public class EncasedMirrorBlockEntity extends KineticBlockEntity {
         }
 
     }
+
 
     public @Nullable State getState(){
         if(Math.abs(Math.abs(this.angle) - 565.5F) <= ANGLE_RANGE) {
@@ -82,6 +83,9 @@ public class EncasedMirrorBlockEntity extends KineticBlockEntity {
                 if(facing.getAxisDirection().equals(Direction.AxisDirection.POSITIVE)){
                     direction = direction.getOpposite();
                 }
+                if(dir.getAxisDirection().equals(Direction.AxisDirection.NEGATIVE)){
+                    direction = direction.getOpposite();
+                }
 
             } else {
                 if(!dir.getAxis().equals(facing.getAxis())) {
@@ -102,11 +106,40 @@ public class EncasedMirrorBlockEntity extends KineticBlockEntity {
     }
 
 
+    @Override
+    protected void read(CompoundTag compound, boolean clientPacket) {
+        super.read(compound, clientPacket);
+        if(compound.contains("AngularPosition")){
+            this.angle = compound.getFloat("AngularPosition");
+        }
+        if(compound.contains("AngularVelocity")){
+            this.rotVelocity = compound.getFloat("AngularVelocity");
+        }
+
+    }
+
+    @Override
+    protected void write(CompoundTag compound, boolean clientPacket) {
+        super.write(compound, clientPacket);
+        compound.putFloat("AngularPosition", this.angle);
+        compound.putFloat("AngularVelocity", this.rotVelocity);
+
+    }
+
     public enum State {
 
-        PARALLEL,
-        PERPENDICULAR;
+        PARALLEL(0),
+        PERPENDICULAR(1);
 
+
+        private final int id;
+        State(int id){
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
 
         public State getPerpendicular(){
             if(this.getAngle() == 0){

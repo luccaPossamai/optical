@@ -26,6 +26,6 @@ public class COBlockTagsProvider extends BlockTagsProvider {
                 BlockTags.ALL_HANGING_SIGNS, BlockTags.ALL_SIGNS, BlockTags.BANNERS, BlockTags.SLABS, BlockTags.WOOL_CARPETS,
                 BlockTags.BUTTONS, BlockTags.PRESSURE_PLATES, BlockTags.WOODEN_TRAPDOORS, BlockTags.CANDLES, BlockTags.CLIMBABLE,
                 BlockTags.FIRE, BlockTags.LEAVES, BlockTags.FLOWERS, BlockTags.CORAL_PLANTS, BlockTags.SAPLINGS, BlockTags.CROPS,
-                BlockTags.RAILS);
+                BlockTags.RAILS, BlockTags.REPLACEABLE_BY_TREES);
     }
 }
