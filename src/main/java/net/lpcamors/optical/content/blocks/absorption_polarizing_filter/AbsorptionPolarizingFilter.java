@@ -59,7 +59,7 @@ public class AbsorptionPolarizingFilter extends HorizontalDirectionalBlock imple
 
     @Override
     public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, Direction direction, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
-        if(direction.getAxis().equals(state.getValue(FACING).getAxis())) return;
+        if(direction.getAxis().isVertical() || direction.getAxis().equals(state.getValue(FACING).getAxis())) return;
         BeamHelper.BeamPolarization beamPolarization = state.getValue(POLARIZATION);
         if(beamPolarization.isDiagonal()){
             if(!direction.equals(state.getValue(FACING).getClockWise())){

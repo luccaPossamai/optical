@@ -11,16 +11,27 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 public class BeamHelper {
+
+    public static boolean canBeamPassThrough(@Nonnull Block block){
+        List<Class<?>> classes = List.of(HalfTransparentBlock.class, SlabBlock.class, CarpetBlock.class);
+        final boolean[] result = {true};
+        classes.forEach(aClass -> result[0] = result[0] || (block.getClass().equals(aClass)));
+
+        return result[0] && block instanceof TintedGlassBlock;
+    }
 
     public static Vec3i ofDyeColor(DyeColor dyeColor){
         float[] floats = dyeColor.getTextureDiffuseColors();
@@ -174,7 +185,7 @@ public class BeamHelper {
     }
     public static BiConsumer<LivingEntity, BeamProperties> dealDamage(){
         return (livingEntity, beamProperties) -> {
-            float damage = 2  * beamProperties.intensity <= 0.25F ? 0 : beamProperties.intensity;
+            float damage = 3  * beamProperties.intensity <= 0.25F ? 0 : beamProperties.intensity;
             if(damage > 0) livingEntity.hurt(CODamageSources.gammaRay(livingEntity.level()), damage);
         };
     }

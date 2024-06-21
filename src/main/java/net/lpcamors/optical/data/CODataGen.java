@@ -44,6 +44,7 @@ public class CODataGen {
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         if (event.includeServer()) {
             COEntriesProvider generatedEntriesProvider = new COEntriesProvider(output, lookupProvider);
+            generator.addProvider(true, new COBlockTagsProvider(output, lookupProvider, existingFileHelper));
             generator.addProvider(true, generatedEntriesProvider);
             generator.addProvider(true, new COSequencedAssemblyRecipeProvider(output));
         }

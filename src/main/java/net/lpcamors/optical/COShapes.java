@@ -17,13 +17,14 @@ public class COShapes {
             OPTICAL_SOURCE = shape(0, 0, 0, 16, 12, 16)
                     .forHorizontal(Direction.NORTH),
 
-            MIRROR_HORIZONTAL = shape(0, 0, 0, 16, 2, 16)
+            ENCASED_MIRROR = shape(0, 0, 0, 16, 2, 16)
+                    .add(3, 2, 3, 13, 14, 13)
                     .add(0,14, 0, 16, 16, 16)
                     .add(1, 2, 1, 3, 14,3)
                     .add(13, 2, 1, 15, 14,3)
                     .add(13, 2, 13, 15, 14,15)
                     .add(1, 2, 13, 3, 14 ,15)
-                    .forHorizontal(Direction.NORTH),
+                    .forDirectional(Direction.UP),
             POLARIZING_BEAM_SPLITTER_CUBE = shape(0, 0, 0, 16, 2, 16)
                             .add(0,14, 0, 16, 16, 16)
                             .add(1, 2, 1, 3, 14,3)

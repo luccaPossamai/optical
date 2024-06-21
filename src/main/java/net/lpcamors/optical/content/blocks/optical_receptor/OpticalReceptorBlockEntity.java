@@ -31,8 +31,8 @@ public class OpticalReceptorBlockEntity extends GeneratingKineticBlockEntity {
 
     public void updateState(){
         BlockPos pos = this.sourceBlockPos;
-        if(this.hasLevel() && pos != null && this.optionalBeamProperties.isPresent()){
-            BlockEntity blockEntity = this.level.getBlockEntity(pos);
+        if(this.hasLevel() && this.optionalBeamProperties.isPresent()){
+            BlockEntity blockEntity = pos == null ? null : this.level.getBlockEntity(pos);
             if(!(blockEntity instanceof OpticalSourceBlockEntity)) {
                 this.optionalBeamProperties = Optional.empty();
             } else {

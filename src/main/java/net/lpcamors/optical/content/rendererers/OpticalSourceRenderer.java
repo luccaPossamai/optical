@@ -49,7 +49,7 @@ public class OpticalSourceRenderer extends KineticBlockEntityRenderer<OpticalSou
         BlockState blockState = opticalLaserSourceBlockEntity.getBlockState();
         Direction direction = blockState.getValue(OpticalSourceBlock.HORIZONTAL_FACING);
 
-        VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
+        VertexConsumer vb = buffer.getBuffer(RenderType.solid());
         SuperByteBuffer laser = CachedBufferer.partial(COPartialModels.LASER, blockState);
 
         float time = AnimationTickHolder.getRenderTime(opticalLaserSourceBlockEntity.getLevel());
@@ -78,8 +78,8 @@ public class OpticalSourceRenderer extends KineticBlockEntityRenderer<OpticalSou
             ms.pushPose();
             ms.translate(0.5f, 0.5F, 0.5F);
             ms.translate(vec.x - pos.x, vec.y - pos.y, vec.z - pos.z);
-            ms.mulPose(Axis.YP.rotation((float)(-Math.atan2((double)z, (double)x) + Math.PI / 2)));
-            ms.mulPose(Axis.XP.rotation((float)(-Math.atan2((double)f, (double)y) + Math.PI / 2)));
+            ms.mulPose(Axis.YP.rotation((float)(-Math.atan2(z, x) + Math.PI / 2)));
+            ms.mulPose(Axis.XP.rotation((float)(Math.atan2(f, y) - Math.PI / 2)));
             VertexConsumer vertexconsumer = multiBufferSource.getBuffer(LASER_BEAM_RENDER_TYPE);
             float t = (float) ((partialTicks + opticalLaserSourceBlockEntity.tickCount) * (1 + Math.floor(Math.abs(opticalLaserSourceBlockEntity.getSpeed()) / 16)));
             float f2 = 0.0F - t * 0.01F;

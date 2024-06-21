@@ -50,6 +50,7 @@
   "create_optical.ponder.opticals.sensor.text_2": "The emitted signal is reduced based on the intensity of the incident beam.",
   "create_optical.ponder.tag.opticals": "Optical Components",
   "create_optical.ponder.tag.opticals.description": "Components which work with optical beams.",
+  "death.attack.create_optical.gamma_ray": "%1$s received a high dose of gamma rays",
   "item.create_optical.golden_coil": "Golden Coil",
   "item.create_optical.incomplete_golden_coil": "Incomplete Golden Coil",
   "item.create_optical.incomplete_laser": "Incomplete Laser",

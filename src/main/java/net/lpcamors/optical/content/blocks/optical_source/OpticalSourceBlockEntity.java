@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.COUtils;
 import net.lpcamors.optical.content.blocks.IBeamReceiver;
+import net.lpcamors.optical.data.COTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.core.BlockPos;
@@ -107,15 +108,15 @@ public class OpticalSourceBlockEntity extends KineticBlockEntity {
                 break;
 
             // Check if there's a transparent block in the way
-            } else if ((state.getBlock() instanceof HalfTransparentBlock halfTransparentBlock && !(halfTransparentBlock instanceof TintedGlassBlock)) || state.getBlock() instanceof IronBarsBlock){
-                this.addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
+            } else if(state.getBlock() instanceof HalfTransparentBlock halfTransparentBlock && !(halfTransparentBlock instanceof TintedGlassBlock)){
                 if(state.getBlock() instanceof BeaconBeamBlock beaconBeamBlock) {
+                    this.addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
                     BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), beamProperties.intensity(), beamProperties.beamPolarization(), beaconBeamBlock.getColor());
                     this.propagateLinearBeamVar(lastPos, direction, beamProperties1, toRemove, i + 1);
                     break;
                 }
             // Check if the beam range ended
-            } else if(i + lastIndex >= range || !state.isAir()){
+            } else if(i + lastIndex >= range || !(state.is(COTags.Blocks.BEAM_CAN_PASS_THROUGH))){
                 this.addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
                 this.beamType.blockStateBiConsumer.accept(this.level.getBlockState(lastPos), beamProperties);
                 break;

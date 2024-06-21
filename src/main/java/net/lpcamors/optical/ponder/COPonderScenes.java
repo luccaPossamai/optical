@@ -123,11 +123,11 @@ public class COPonderScenes {
         scene.title("opticals.mirror", "Propagating Beams through mirrors");
         scene.configureBasePlate(0, 0, 5);
         BlockPos mirror = util.grid.at(1, 1, 2);
-        BlockPos bearing = util.grid.at(1, 0, 2);
         BlockPos source = util.grid.at(4,1, 2);
         BlockPos upReceptor = util.grid.at(0,1, 4);
         BlockPos downReceptor = util.grid.at(0,1, 0);
         Selection sourceSystemSelect = util.select.fromTo(4, 1, 2, 5, 1, 2);
+        Selection rotationSection = util.select.fromTo(1, 1, 2, 1, 2, 2);
         Selection bigWheelSelect = util.select.position(5, 0, 1);
         Selection upReceptorSelect = util.select.fromTo(0, 1, 4, 1, 1, 4);
         Selection downReceptorSelect = util.select.fromTo(0, 1, 0, 1, 1, 0);
@@ -140,17 +140,16 @@ public class COPonderScenes {
         scene.idle(5);
         scene.world.showSection(downReceptorSelect, Direction.DOWN);
         scene.idle(5);
+        scene.world.showSection(rotationSection, Direction.DOWN);
+        scene.idle(5);
         changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 0);
         scene.idle(10);
         changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 64);
         scene.effects.indicateSuccess(source);
 
-        ElementLink<WorldSectionElement> contraption =
-                scene.world.showIndependentSection(util.select.position(mirror), Direction.EAST);
-        scene.world.configureCenterOfRotation(contraption, util.vector.centerOf(mirror));
         scene.idle(20);
-        scene.world.setKineticSpeed(upReceptorSelect, 64);
-        scene.effects.indicateSuccess(upReceptor);
+        scene.world.setKineticSpeed(downReceptorSelect, 64);
+        scene.effects.indicateSuccess(downReceptor);
         scene.idle(20);
         scene.overlay.showText(40)
                 .text("Encased mirrors can propagate the incident beam perpendicularly.")
@@ -158,18 +157,19 @@ public class COPonderScenes {
         scene.idle(60);
 
 
-        scene.world.setKineticSpeed(upReceptorSelect, 0);
-        scene.world.rotateSection(contraption, 0, 90, 0, 20);
-        scene.world.rotateBearing(bearing, 90, 20);
 
         scene.overlay.showText(40)
                 .text("You can rotate it to make the beam propagate wherever you want")
                 .pointAt(util.vector.blockSurface(mirror, Direction.UP));
 
+        scene.world.setKineticSpeed(rotationSection, 16);
+        scene.world.setKineticSpeed(downReceptorSelect, 0);
         scene.idle(20);
+        scene.world.setKineticSpeed(rotationSection, 0);
+        scene.idle(10);
 
-        scene.world.setKineticSpeed(downReceptorSelect, 64);
-        scene.effects.indicateSuccess(downReceptor);
+        scene.world.setKineticSpeed(upReceptorSelect, 64);
+        scene.effects.indicateSuccess(upReceptor);
 
         scene.idle(40);
 

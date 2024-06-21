@@ -28,6 +28,7 @@ public class COLang {
         create("polarization.horizontal","Horizontal");
         create("polarization.diagonal_negative","Negative Diagonal");
         common("itemGroup", "co_base", "Optical Tab");
+        common("death.attack", "gamma_ray",  "%1$s received a high dose of gamma rays");
     }
 
 

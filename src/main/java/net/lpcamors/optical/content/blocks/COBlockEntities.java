@@ -5,10 +5,12 @@ import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.lpcamors.optical.content.blocks.absorption_polarizing_filter.AbsorptionPolarizingFilterBlockEntity;
+import net.lpcamors.optical.content.blocks.mirror.EncasedMirrorBlockEntity;
 import net.lpcamors.optical.content.blocks.optical_sensor.OpticalSensorBlockEntity;
 import net.lpcamors.optical.content.blocks.optical_receptor.OpticalReceptorBlockEntity;
 import net.lpcamors.optical.content.blocks.optical_source.OpticalSourceBlockEntity;
 import net.lpcamors.optical.content.rendererers.AbsorptionPolarizingFilterRenderer;
+import net.lpcamors.optical.content.rendererers.EncasedMirrorRenderer;
 import net.lpcamors.optical.content.rendererers.OpticalSensorRenderer;
 import net.lpcamors.optical.content.rendererers.OpticalSourceRenderer;
 
@@ -30,6 +32,12 @@ public class COBlockEntities {
             .instance(() -> ShaftInstance::new)
             .validBlocks(COBlocks.OPTICAL_RECEPTOR)
             .renderer(() -> ShaftRenderer::new)
+            .register();
+    public static final BlockEntityEntry<EncasedMirrorBlockEntity> ENCASED_MIRROR = REGISTRATE
+            .blockEntity("encased_mirror", EncasedMirrorBlockEntity::new)
+            .instance(() -> ShaftInstance::new)
+            .validBlocks(COBlocks.ENCASED_MIRROR)
+            .renderer(() -> EncasedMirrorRenderer::new)
             .register();
 
     public static final BlockEntityEntry<AbsorptionPolarizingFilterBlockEntity> ABSORPTION_POLARIZING_FILTER = REGISTRATE

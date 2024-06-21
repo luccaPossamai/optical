@@ -1,6 +1,5 @@
 package net.lpcamors.optical.content.blocks;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.ModelGen;
@@ -10,11 +9,11 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.content.blocks.absorption_polarizing_filter.AbsorptionPolarizingFilter;
+import net.lpcamors.optical.content.blocks.mirror.EncasedMirrorBlock;
 import net.lpcamors.optical.content.blocks.optical_sensor.OpticalSensorBlock;
 import net.lpcamors.optical.content.blocks.optical_receptor.OpticalReceptorBlock;
 import net.lpcamors.optical.content.blocks.optical_receptor.OpticalReceptorGenerator;
 import net.lpcamors.optical.content.blocks.optical_source.OpticalSourceBlock;
-import net.lpcamors.optical.content.blocks.mirror.MirrorBlock;
 import net.lpcamors.optical.content.blocks.polarizing_beam_splitter_block.PolarizingBeamSplitterBlock;
 import net.lpcamors.optical.data.blockstates.OpticalSensorBlockState;
 import net.minecraft.client.renderer.RenderType;
@@ -49,6 +48,7 @@ public class COBlocks {
                     .transform(BlockStressDefaults.setGeneratorSpeed(() -> Couple.create(0, 256)))
                     .register();
 
+    /*
     public static final BlockEntry<MirrorBlock> ENCASED_MIRROR =
             COMod.REGISTRATE.block("encased_mirror", MirrorBlock::new)
                     .initialProperties(SharedProperties::stone)
@@ -59,6 +59,22 @@ public class COBlocks {
                     .item()
                     .transform(ModelGen.customItemModel())
                     .register();
+
+     */
+
+    public static final BlockEntry<EncasedMirrorBlock> ENCASED_MIRROR =
+            COMod.REGISTRATE.block("encased_mirror", EncasedMirrorBlock::new)
+                    .initialProperties(SharedProperties::stone)
+                    .properties(properties -> properties)
+                    .blockstate(BlockStateGen.directionalBlockProvider(true))
+                    .transform(TagGen.axeOrPickaxe())
+                    .addLayer(() -> RenderType::cutoutMipped)
+                    .item()
+                    .transform(ModelGen.customItemModel())
+                    .register();
+
+
+
     public static final BlockEntry<AbsorptionPolarizingFilter> ABSORPTION_POLARIZING_FILTER =
             COMod.REGISTRATE.block("absorption_polarizing_filter", AbsorptionPolarizingFilter::new)
                     .initialProperties(SharedProperties::stone)

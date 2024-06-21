@@ -91,7 +91,7 @@ public class OpticalReceptorBlock extends DirectionalAxisKineticBlock implements
     @Override
     public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, Direction direction, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
         if(state.getValue(FACING).getAxis().isVertical()){
-            if(direction.getAxis().equals(Direction.Axis.X) == state.getValue(AXIS_ALONG_FIRST_COORDINATE)) return;
+            if(direction.getAxis().isVertical() || direction.getAxis().equals(Direction.Axis.X) == state.getValue(AXIS_ALONG_FIRST_COORDINATE)) return;
         } else {
             if(!direction.equals(state.getValue(FACING).getOpposite())) return;
         }

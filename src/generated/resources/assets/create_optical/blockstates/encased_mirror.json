@@ -1,18 +1,29 @@
 {
   "variants": {
+    "facing=down": {
+      "model": "create_optical:block/encased_mirror/block",
+      "x": 180
+    },
     "facing=east": {
       "model": "create_optical:block/encased_mirror/block",
+      "x": 90,
       "y": 90
     },
     "facing=north": {
-      "model": "create_optical:block/encased_mirror/block"
+      "model": "create_optical:block/encased_mirror/block",
+      "x": 90
     },
     "facing=south": {
       "model": "create_optical:block/encased_mirror/block",
+      "x": 90,
       "y": 180
+    },
+    "facing=up": {
+      "model": "create_optical:block/encased_mirror/block"
     },
     "facing=west": {
       "model": "create_optical:block/encased_mirror/block",
+      "x": 90,
       "y": 270
     }
   }

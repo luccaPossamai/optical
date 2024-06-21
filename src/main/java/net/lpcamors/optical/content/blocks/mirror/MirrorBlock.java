@@ -32,7 +32,7 @@ public class MirrorBlock extends HorizontalDirectionalBlock implements IWrenchab
 
     @Override
     public @NotNull VoxelShape getShape(BlockState p_60555_, @NotNull BlockGetter p_60556_, @NotNull BlockPos p_60557_, @NotNull CollisionContext p_60558_) {
-        return (COShapes.MIRROR_HORIZONTAL).get(p_60555_.getValue(FACING));
+        return (COShapes.ENCASED_MIRROR).get(p_60555_.getValue(FACING));
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -40,8 +40,10 @@ public class MirrorBlock extends HorizontalDirectionalBlock implements IWrenchab
     }
     @Override
     public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, Direction direction, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
-        direction = direction.getAxis().equals(state.getValue(FACING).getAxis()) ? direction.getCounterClockWise() : direction.getClockWise();
-        opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos, direction, beamProperties, toRemove, lastIndex);
+        if(direction.getAxis().isHorizontal()){
+            direction = direction.getAxis().equals(state.getValue(FACING).getAxis()) ? direction.getCounterClockWise() : direction.getClockWise();
+            opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos, direction, beamProperties, toRemove, lastIndex);
+        }
 
     }
 }
