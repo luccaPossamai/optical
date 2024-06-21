@@ -1,6 +1,9 @@
 package net.lpcamors.optical.content.blocks.polarizing_beam_splitter_block;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
+import com.simibubi.create.foundation.block.IBE;
+import net.lpcamors.optical.content.blocks.COBlockEntities;
 import net.lpcamors.optical.content.blocks.IBeamReceiver;
 import net.lpcamors.optical.content.blocks.optical_source.BeamHelper;
 import net.lpcamors.optical.content.blocks.optical_source.OpticalSourceBlockEntity;
@@ -11,6 +14,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -19,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PolarizingBeamSplitterBlock extends HorizontalDirectionalBlock implements IWrenchable, IBeamReceiver {
+public class PolarizingBeamSplitterBlock extends HorizontalDirectionalBlock implements IWrenchable, IBeamReceiver, IBE<PolarizingBeamSplitterBlockEntity> {
     public PolarizingBeamSplitterBlock(Properties p_54120_) {
         super(p_54120_);
     }
@@ -55,4 +59,13 @@ public class PolarizingBeamSplitterBlock extends HorizontalDirectionalBlock impl
 
     }
 
+    @Override
+    public Class<PolarizingBeamSplitterBlockEntity> getBlockEntityClass() {
+        return PolarizingBeamSplitterBlockEntity.class;
+    }
+
+    @Override
+    public BlockEntityType<? extends PolarizingBeamSplitterBlockEntity> getBlockEntityType() {
+        return COBlockEntities.POLARIZING_BEAM_SPLITTER.get();
+    }
 }

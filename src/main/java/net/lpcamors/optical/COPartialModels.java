@@ -12,7 +12,8 @@ public class COPartialModels {
     POLARIZING_FILTER = block("absorption_polarizing_filter/filter"),
     OPTICAL_SENSOR_LAMP = block("optical_sensor/lamp"),
     OPTICAL_SENSOR_LAMP_GLOW = block("optical_sensor/lamp_glow"),
-    MIRROR = block("encased_mirror/mirror");
+    MIRROR = block("encased_mirror/mirror"),
+    POLARIZING_BEAM_SPLITTER = block("polarizing_beam_splitter_block/cube");
 
     private static PartialModel block(String path) {
         return new PartialModel(new ResourceLocation(COMod.ID, "block/" + path));

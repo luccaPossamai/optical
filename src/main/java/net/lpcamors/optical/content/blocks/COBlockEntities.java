@@ -9,10 +9,8 @@ import net.lpcamors.optical.content.blocks.mirror.EncasedMirrorBlockEntity;
 import net.lpcamors.optical.content.blocks.optical_sensor.OpticalSensorBlockEntity;
 import net.lpcamors.optical.content.blocks.optical_receptor.OpticalReceptorBlockEntity;
 import net.lpcamors.optical.content.blocks.optical_source.OpticalSourceBlockEntity;
-import net.lpcamors.optical.content.rendererers.AbsorptionPolarizingFilterRenderer;
-import net.lpcamors.optical.content.rendererers.EncasedMirrorRenderer;
-import net.lpcamors.optical.content.rendererers.OpticalSensorRenderer;
-import net.lpcamors.optical.content.rendererers.OpticalSourceRenderer;
+import net.lpcamors.optical.content.blocks.polarizing_beam_splitter_block.PolarizingBeamSplitterBlockEntity;
+import net.lpcamors.optical.content.rendererers.*;
 
 import static com.simibubi.create.Create.REGISTRATE;
 
@@ -51,6 +49,11 @@ public class COBlockEntities {
             .blockEntity("optical_sensor", OpticalSensorBlockEntity::new)
             .validBlocks(COBlocks.OPTICAL_SENSOR)
             .renderer(() -> OpticalSensorRenderer::new)
+            .register();
+    public static final BlockEntityEntry<PolarizingBeamSplitterBlockEntity> POLARIZING_BEAM_SPLITTER = REGISTRATE
+            .blockEntity("polarizing_beam_splitter", PolarizingBeamSplitterBlockEntity::new)
+            .validBlocks(COBlocks.POLARIZING_BEAM_SPLITTER_BLOCK)
+            .renderer(() -> PolarizingBeamSplitterRenderer::new)
             .register();
 
 

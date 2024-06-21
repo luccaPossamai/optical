@@ -48,19 +48,6 @@ public class COBlocks {
                     .transform(BlockStressDefaults.setGeneratorSpeed(() -> Couple.create(0, 256)))
                     .register();
 
-    /*
-    public static final BlockEntry<MirrorBlock> ENCASED_MIRROR =
-            COMod.REGISTRATE.block("encased_mirror", MirrorBlock::new)
-                    .initialProperties(SharedProperties::stone)
-                    .properties(properties -> properties)
-                    .transform(TagGen.axeOrPickaxe())
-                    .blockstate(BlockStateGen.horizontalBlockProvider(true))
-                    .addLayer(() -> RenderType::cutoutMipped)
-                    .item()
-                    .transform(ModelGen.customItemModel())
-                    .register();
-
-     */
 
     public static final BlockEntry<EncasedMirrorBlock> ENCASED_MIRROR =
             COMod.REGISTRATE.block("encased_mirror", EncasedMirrorBlock::new)
@@ -91,7 +78,7 @@ public class COBlocks {
                     .properties(properties -> properties.mapColor(MapColor.COLOR_GRAY).noOcclusion())
                     .transform(TagGen.axeOrPickaxe())
                     .blockstate(BlockStateGen.horizontalBlockProvider(true))
-                    .addLayer(() -> RenderType::translucent)
+                    .addLayer(() -> RenderType::solid)
                     .item()
                     .transform(ModelGen.customItemModel())
                     .register();
