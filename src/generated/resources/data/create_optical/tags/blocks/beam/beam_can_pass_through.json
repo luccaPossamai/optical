@@ -1,0 +1,28 @@
+{
+  "values": [
+    "minecraft:air",
+    "minecraft:light",
+    "minecraft:tripwire",
+    "minecraft:redstone_wire",
+    "minecraft:water",
+    "minecraft:repeater",
+    "minecraft:comparator",
+    "#minecraft:all_hanging_signs",
+    "#minecraft:all_signs",
+    "#minecraft:banners",
+    "#minecraft:slabs",
+    "#minecraft:wool_carpets",
+    "#minecraft:buttons",
+    "#minecraft:pressure_plates",
+    "#minecraft:wooden_trapdoors",
+    "#minecraft:candles",
+    "#minecraft:climbable",
+    "#minecraft:fire",
+    "#minecraft:leaves",
+    "#minecraft:flowers",
+    "#minecraft:coral_plants",
+    "#minecraft:saplings",
+    "#minecraft:crops",
+    "#minecraft:rails"
+  ]
+}
