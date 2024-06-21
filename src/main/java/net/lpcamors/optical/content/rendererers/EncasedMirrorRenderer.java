@@ -3,8 +3,6 @@ package net.lpcamors.optical.content.rendererers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.base.ShaftRenderer;
-import com.simibubi.create.content.kinetics.transmission.ClutchBlockEntity;
-import com.simibubi.create.content.logistics.depot.EjectorRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import net.lpcamors.optical.COPartialModels;
