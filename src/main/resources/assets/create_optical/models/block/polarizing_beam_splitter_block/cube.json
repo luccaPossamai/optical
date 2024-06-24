@@ -1,0 +1,41 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"texture_size": [32, 32],
+	"textures": {
+		"1": "create_optical:block/polarizing_beam_splitter_block/polarizing_beam_splitter_cube",
+		"particle": "create:block/andesite_casing"
+	},
+	"elements": [
+		{
+			"from": [3, 3, 3],
+			"to": [13, 13, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 5, 5], "texture": "#1"},
+				"east": {"uv": [0, 0, 5, 5], "texture": "#1"},
+				"south": {"uv": [0, 0, 5, 5], "texture": "#1"},
+				"west": {"uv": [0, 0, 5, 5], "texture": "#1"},
+				"up": {"uv": [0, 5, 5, 10], "texture": "#1"},
+				"down": {"uv": [0, 5, 5, 10], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "bars",
+			"origin": [8, 8, 8],
+			"children": []
+		},
+		{
+			"name": "base",
+			"origin": [0, 0, 0],
+			"children": []
+		},
+		{
+			"name": "group",
+			"origin": [8, 8, 8],
+			"children": [0]
+		}
+	]
+}
