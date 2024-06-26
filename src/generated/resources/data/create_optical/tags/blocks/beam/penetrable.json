@@ -24,6 +24,8 @@
     "#minecraft:saplings",
     "#minecraft:crops",
     "#minecraft:rails",
-    "#minecraft:replaceable_by_trees"
+    "#minecraft:replaceable_by_trees",
+    "#forge:glass",
+    "#forge:glass_panes"
   ]
 }

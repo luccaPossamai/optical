@@ -10,7 +10,8 @@ public class COTags {
 
     public static class Blocks {
 
-        public static final TagKey<Block> BEAM_CAN_PASS_THROUGH = mod("beam/beam_can_pass_through");
+        public static final TagKey<Block> PENETRABLE = mod("beam/penetrable");
+        public static final TagKey<Block> IMPENETRABLE = mod("beam/impenetrable");
 
         private static TagKey<Block> mod(String path){
             return BlockTags.create(new ResourceLocation(COMod.ID, path));

@@ -1,2 +1,3 @@
-// 1.20.1	2024-06-21T15:50:25.9043088	Tags for minecraft:block mod id create_optical
-6b10c53051e7bcb8d2bb05f9ba6a4ea010f69d54 data/create_optical/tags/blocks/beam/beam_can_pass_through.json
+// 1.20.1	2024-06-26T14:55:12.068013	Tags for minecraft:block mod id create_optical
+3b7798d92925971716a0b9a2f711ec84885e98a5 data/create_optical/tags/blocks/beam/impenetrable.json
+acaec328b92461d0b08815dd81f720f0775bda2f data/create_optical/tags/blocks/beam/penetrable.json
