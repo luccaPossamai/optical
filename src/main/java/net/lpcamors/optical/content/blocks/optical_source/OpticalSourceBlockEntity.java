@@ -2,7 +2,6 @@ package net.lpcamors.optical.content.blocks.optical_source;
 
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import com.simibubi.create.content.logistics.depot.EjectorBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
@@ -14,7 +13,6 @@ import net.lpcamors.optical.COUtils;
 import net.lpcamors.optical.content.blocks.IBeamReceiver;
 import net.lpcamors.optical.data.COTags;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.OptionInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -27,15 +25,12 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.antlr.v4.runtime.misc.IntegerList;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class OpticalSourceBlockEntity extends KineticBlockEntity {
 
@@ -116,7 +111,7 @@ public class OpticalSourceBlockEntity extends KineticBlockEntity {
                     break;
                 }
             // Check if the beam range ended
-            } else if(i + lastIndex >= range || !(state.is(COTags.Blocks.BEAM_CAN_PASS_THROUGH))){
+            } else if(i + lastIndex >= range || !(state.is(COTags.Blocks.PENETRABLE)) || (state.is(COTags.Blocks.IMPENETRABLE))){
                 this.addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
                 this.beamType.blockStateBiConsumer.accept(this.level.getBlockState(lastPos), beamProperties);
                 break;
