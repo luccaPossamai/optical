@@ -102,14 +102,13 @@ public class OpticalSourceBlockEntity extends KineticBlockEntity {
                 this.getLevel().sendBlockUpdated(lastPos, state, state, 16);
                 break;
 
-            // Check if there's a transparent block in the way
-            } else if(state.getBlock() instanceof HalfTransparentBlock halfTransparentBlock && !(halfTransparentBlock instanceof TintedGlassBlock)){
-                if(state.getBlock() instanceof BeaconBeamBlock beaconBeamBlock) {
-                    this.addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
-                    BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), beamProperties.intensity(), beamProperties.beamPolarization(), beaconBeamBlock.getColor());
-                    this.propagateLinearBeamVar(lastPos, direction, beamProperties1, toRemove, i + 1);
-                    break;
-                }
+            // Check if there is a BeaconBeamBlock in the way(colorizes the beam)
+            } else if(state.getBlock() instanceof BeaconBeamBlock beaconBeamBlock) {
+                this.addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
+                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), beamProperties.intensity(), beamProperties.beamPolarization(), beaconBeamBlock.getColor());
+                this.propagateLinearBeamVar(lastPos, direction, beamProperties1, toRemove, i + 1);
+                break;
+
             // Check if the beam range ended
             } else if(i + lastIndex >= range || !(state.is(COTags.Blocks.PENETRABLE)) || (state.is(COTags.Blocks.IMPENETRABLE))){
                 this.addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
