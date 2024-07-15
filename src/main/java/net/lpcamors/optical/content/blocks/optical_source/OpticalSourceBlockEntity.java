@@ -15,6 +15,7 @@ import net.lpcamors.optical.data.COTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -35,15 +36,14 @@ import java.util.*;
 public class OpticalSourceBlockEntity extends KineticBlockEntity {
 
 
-    public List<Pair<Vec3, Vec3>> blockPosToBeamLight = new ArrayList<>();
-    public Map<Pair<Vec3, Vec3>, BeamHelper.BeamProperties> beamPropertiesMap = new HashMap<>();
+    public List<Pair<Vec3i, Vec3i>> blockPosToBeamLight = new ArrayList<>();
+    public Map<Pair<Vec3i, Vec3i>, BeamHelper.BeamProperties> beamPropertiesMap = new HashMap<>();
     public BeamHelper.BeamType beamType;
     public List<BlockPos> iBeamReceiverBlockPos = new ArrayList<>();
     public int lastIBeamReceiverListSize = 0;
     public BeamHelper.BeamProperties initialBeamProperties;
     protected ScrollOptionBehaviour<BeamHelper.BeamPolarization> polarization;
     public int tickCount;
-    public static final int RANGE = 32;
 
     public OpticalSourceBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -62,12 +62,12 @@ public class OpticalSourceBlockEntity extends KineticBlockEntity {
         }
         if(Math.abs(this.getSpeed()) > 0){
             this.beamType = BeamHelper.BeamType.getTypeBySpeed(this.getSpeed());
-            this.initialBeamProperties = new BeamHelper.BeamProperties(this.getSpeed(), this.polarization.get());
+            this.initialBeamProperties = new BeamHelper.BeamProperties(this.getSpeed(), this.polarization.get(), this.getBlockState().getValue(OpticalSourceBlock.HORIZONTAL_FACING));
             this.tickCount++;
             this.blockPosToBeamLight.clear();
             this.beamPropertiesMap.clear();
             List<BlockPos> toRemove = new ArrayList<>(this.iBeamReceiverBlockPos);
-            this.propagateLinearBeamVar(this.getBlockPos(), this.getBlockState().getValue(OpticalSourceBlock.HORIZONTAL_FACING), this.initialBeamProperties, toRemove, 0);
+            this.propagateLinearBeamVar(this.getBlockPos(), this.initialBeamProperties, toRemove, 0);
             this.iBeamReceiverBlockPos.removeAll(toRemove);
         } else {
             this.beamType = null;
@@ -75,43 +75,43 @@ public class OpticalSourceBlockEntity extends KineticBlockEntity {
         }
     }
 
-    public void propagateLinearBeamVar(BlockPos initialPos, Direction direction, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex){
+    public void propagateLinearBeamVar(BlockPos initialPos, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex){
         BlockPos lastPos = initialPos;
+        Direction direction = beamProperties.direction();
         int range = this.initialBeamProperties.getType().getRange();
         for (int i = 0; i + lastIndex <= range; i++) {
             lastPos = lastPos.relative(direction);
-            Vec3 vec3 = lastPos.getCenter();
+            Vec3i vec3 = lastPos;
             BlockState state = this.level.getBlockState(lastPos);
-
+            boolean penetrable = state.is(COTags.Blocks.PENETRABLE) && !state.is(COTags.Blocks.IMPENETRABLE);
 
             //Check if there's and living entity in the way
-            LivingEntity livingEntity = this.level.getNearestEntity(LivingEntity.class, TargetingConditions.forNonCombat(), null, vec3.x(), vec3.y(), vec3.z(), COUtils.radius(vec3, 0.25));
-            if(livingEntity != null && state.isAir()){
-                vec3 = new Vec3(Math.abs(direction.getNormal().getX()) == 0 ? vec3.x() : livingEntity.getX(), vec3.y(), Math.abs(direction.getNormal().getZ()) == 0 ? vec3.z() : livingEntity.getZ());
+            LivingEntity livingEntity = IBeamReceiver.getNearLivingEntity(level, lastPos, IBeamReceiver.LIVING_ENTITY_EXTENDED_RADIUS, direction).orElse(null);
+            if(livingEntity != null && (penetrable || state.getBlock() instanceof IBeamReceiver)){
                 this.beamType.livingEntityBiConsumer.accept(livingEntity, beamProperties);
                 if(!this.beamType.canPassThroughEntities()) {
-                    addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
+                    addToBeamBlocks(initialPos, vec3, beamProperties);
                     break;
                 }
             }
 
             // Check if the beam passes through a ILaserReceiver
             if(state.getBlock() instanceof IBeamReceiver iBeamReceiver) {
-                addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
-                iBeamReceiver.receive(this, state, lastPos, direction, beamProperties, toRemove, i + 1);
+                addToBeamBlocks(initialPos, vec3, beamProperties);
+                iBeamReceiver.receive(this, state, lastPos, beamProperties, toRemove, i + 1);
                 this.getLevel().sendBlockUpdated(lastPos, state, state, 16);
                 break;
 
             // Check if there is a BeaconBeamBlock in the way(colorizes the beam)
             } else if(state.getBlock() instanceof BeaconBeamBlock beaconBeamBlock) {
-                this.addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
-                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), beamProperties.intensity(), beamProperties.beamPolarization(), beaconBeamBlock.getColor());
-                this.propagateLinearBeamVar(lastPos, direction, beamProperties1, toRemove, i + 1);
+                this.addToBeamBlocks(initialPos, vec3, beamProperties);
+                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), beamProperties.intensity(), beamProperties.beamPolarization(), beaconBeamBlock.getColor(), direction);
+                this.propagateLinearBeamVar(lastPos, beamProperties1, toRemove, i + 1);
                 break;
 
             // Check if the beam range ended
-            } else if(i + lastIndex >= range || !(state.is(COTags.Blocks.PENETRABLE)) || (state.is(COTags.Blocks.IMPENETRABLE))){
-                this.addToBeamBlocks(initialPos.getCenter(), vec3, beamProperties);
+            } else if(i + lastIndex >= range || !penetrable){
+                this.addToBeamBlocks(initialPos, vec3, beamProperties);
                 this.beamType.blockStateBiConsumer.accept(this.level.getBlockState(lastPos), beamProperties);
                 break;
             }
@@ -119,8 +119,8 @@ public class OpticalSourceBlockEntity extends KineticBlockEntity {
         }
     }
 
-    public void addToBeamBlocks(Vec3 vec, Vec3 vec1, BeamHelper.BeamProperties beamProperties){
-        Pair<Vec3, Vec3> pair = new Pair<>(vec, vec1);
+    public void addToBeamBlocks(Vec3i vec, Vec3i vec1, BeamHelper.BeamProperties beamProperties){
+        Pair<Vec3i, Vec3i> pair = new Pair<>(vec, vec1);
         this.blockPosToBeamLight.add(pair);
         this.beamPropertiesMap.put(pair, beamProperties);
     }

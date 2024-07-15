@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import net.lpcamors.optical.CODamageSources;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.COIcons;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.*;
 import net.minecraft.util.StringRepresentable;
@@ -17,9 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
@@ -38,12 +37,12 @@ public class BeamHelper {
         return new Vec3i((int) (floats[0] * 255), (int) (floats[1] * 255), (int) (floats[2] * 255));
     }
 
-    public record BeamProperties(float speed, float intensity, BeamPolarization beamPolarization, DyeColor dyeColor){
-        BeamProperties(float speed){
-            this(speed, BeamPolarization.RANDOM);
+    public record BeamProperties(float speed, float intensity, BeamPolarization beamPolarization, DyeColor dyeColor, Direction direction){
+        BeamProperties(float speed, Direction direction){
+            this(speed, BeamPolarization.RANDOM, direction);
         }
-        BeamProperties(float speed, BeamPolarization beamPolarization){
-            this(speed, 1, beamPolarization, DyeColor.WHITE);
+        BeamProperties(float speed, BeamPolarization beamPolarization, Direction direction){
+            this(speed, 1, beamPolarization, DyeColor.WHITE, direction);
         }
 
         public float getIntensitySpeed(){
@@ -59,25 +58,30 @@ public class BeamHelper {
             ListTag listTag = new ListTag();
             ListTag tagFloats = new ListTag();
             ListTag tagInts = new ListTag();
+            ListTag tagDirection = new ListTag();
             tagFloats.add(FloatTag.valueOf(this.speed));
             tagFloats.add(FloatTag.valueOf(this.intensity));
             tagInts.add(IntTag.valueOf(this.beamPolarization.id));
             tagInts.add(IntTag.valueOf(this.dyeColor.getId()));
+            tagDirection.add(IntTag.valueOf(this.direction == null ? 0 : List.of(Direction.values()).indexOf(direction)));
+
             listTag.add(tagFloats);
             listTag.add(tagInts);
+            listTag.add(tagDirection);
             compoundTag.put("BeamProperties", listTag);
         }
 
-        public static @Nullable BeamProperties read(CompoundTag compoundTag){
-            if(!compoundTag.contains("BeamProperties")) return null;
+        public static Optional<BeamProperties> read(CompoundTag compoundTag){
+
+            if(!compoundTag.contains("BeamProperties")) return Optional.empty();
             ListTag listTag = (ListTag) compoundTag.get("BeamProperties");
-            if(listTag == null) return null;
+            if(listTag == null) return Optional.empty();
             ListTag tagFloats = listTag.getList(0);
             ListTag tagInts = listTag.getList(1);
-            return new BeamProperties(((FloatTag) tagFloats.get(0)).getAsFloat(), ((FloatTag) tagFloats.get(1)).getAsFloat(), BeamPolarization.values()[((IntTag)tagInts.get(0)).getAsInt()], DyeColor.byId(((IntTag)tagInts.get(1)).getAsInt()));
+            ListTag tagDirection = listTag.getList(2);
+
+            return Optional.of(new BeamProperties(((FloatTag) tagFloats.get(0)).getAsFloat(), ((FloatTag) tagFloats.get(1)).getAsFloat(), BeamPolarization.values()[((IntTag)tagInts.get(0)).getAsInt()], DyeColor.byId(((IntTag)tagInts.get(1)).getAsInt()), Direction.values()[tagDirection.getInt(0)])); //Direction.byName(listTag.getString(2))));
         }
-
-
     }
 
 
@@ -215,7 +219,7 @@ public class BeamHelper {
             BeamType beamType = RADIO;
             for (BeamType beamType1 : BeamType.values()){
                 beamType = beamType1;
-                if(Math.abs(speed) <= Math.pow(2, 2 * beamType1.id + 2)){
+                if(Math.abs(speed) <= Math.pow(2, 2 * beamType1.id + 3)){
                     break;
                 }
             }

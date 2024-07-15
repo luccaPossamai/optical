@@ -23,6 +23,7 @@ public class EncasedMirrorRenderer extends ShaftRenderer<EncasedMirrorBlockEntit
 
     @Override
     protected void renderSafe(EncasedMirrorBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource bufferSource, int light, int overlay) {
+
         super.renderSafe(be, partialTicks, ms, bufferSource, light, overlay);
         BlockState state = be.getBlockState();
         SuperByteBuffer filter = CachedBufferer.partial(COPartialModels.MIRROR, state);
@@ -33,7 +34,7 @@ public class EncasedMirrorRenderer extends ShaftRenderer<EncasedMirrorBlockEntit
         }
 
         kineticRotationTransform(filter, be, Direction.Axis.Y, be.getIndependentAngle(partialTicks),
-                light).renderInto(ms, bufferSource.getBuffer(RenderType.solid()));
+                light).light(light).renderInto(ms, bufferSource.getBuffer(RenderType.solid()));
     }
 
 

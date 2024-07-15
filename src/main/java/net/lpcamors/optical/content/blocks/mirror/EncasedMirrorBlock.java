@@ -60,11 +60,13 @@ public class EncasedMirrorBlock extends DirectionalKineticBlock implements IBE<E
     }
 
     @Override
-    public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, Direction direction, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
+    public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
+        Direction direction = beamProperties.direction();
         EncasedMirrorBlockEntity mirrorBlockEntity = this.getBlockEntity(opticalLaserSourceBlockEntity.getLevel(), lastPos);
         if(mirrorBlockEntity == null) return;
         @Nullable Direction direction1 = mirrorBlockEntity.getReflectedDirection(direction, state);
-        if(direction1 != null) opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos, direction1, beamProperties, toRemove, lastIndex);
+        BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), beamProperties.intensity(), beamProperties.beamPolarization(), beamProperties.dyeColor(), direction1);
+        if(direction1 != null) opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos, beamProperties1, toRemove, lastIndex);
 
     }
 

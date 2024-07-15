@@ -1,14 +1,12 @@
-// 1.20.1	2024-06-20T00:48:07.1011304	Registrate Provider for create_optical [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.20.1	2024-07-07T18:50:47.1089486	Registrate Provider for create_optical [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 5cbf586d8f8be2fbf5e44f97c6948abf0f8d7958 assets/create_optical/blockstates/absorption_polarizing_filter.json
 ff261ca52eacf3ca7241337d3cbf7dc7786aa1d6 assets/create_optical/blockstates/encased_mirror.json
 94bf07a6a4f7b739feaa732b7aaa8880fc3b6c54 assets/create_optical/blockstates/optical_receptor.json
-58a69a7fdb95dbb1b10bba7f89cfef4464b6481e assets/create_optical/blockstates/optical_sensor.json
+65f088b6c0f687dc1adee51b8c4cd26caa9f3d22 assets/create_optical/blockstates/optical_sensor.json
 cf38d1e16643218278587a1c8d724b63d87b504b assets/create_optical/blockstates/optical_source.json
 bfcc43825e43b9ef71b624e21f9726fc05c872fb assets/create_optical/blockstates/polarizing_beam_splitter_block.json
-df65080b43d3f1d1653a433fb4ba167c4533266b assets/create_optical/lang/en_ud.json
-875e4d451f3db3c1a073ea94dddb1d200406280a assets/create_optical/lang/en_us.json
-00386f688d9e010fdaedc35c824cf3b669550710 assets/create_optical/models/block/optical_sensor.json
-112d254ca1a977eb94752f824a87185b44bf5c3e assets/create_optical/models/block/optical_sensor_on.json
+d44bbef3dbe5b445a1a16f9df4b5844ad7a22d25 assets/create_optical/lang/en_ud.json
+8c515ee9794dffab3966b1e56d3d958d0c6335a9 assets/create_optical/lang/en_us.json
 40a19ba362dcaca3113acabce012770f618c58f5 assets/create_optical/models/item/absorption_polarizing_filter.json
 9aef4d7190066d767b9d19ada7625e2c089e9015 assets/create_optical/models/item/encased_mirror.json
 c7e05cd6f48037efa9bbcf1c665e88872729950e assets/create_optical/models/item/golden_coil.json

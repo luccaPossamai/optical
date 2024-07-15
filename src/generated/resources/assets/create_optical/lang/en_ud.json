@@ -11,6 +11,10 @@
   "create.create_optical.beam_type.type.range": ":ǝbuɐᴚ ʞɔoןᗺ",
   "create.create_optical.beam_type.type.visible": "ʇɥbıꞀ ǝןqısıΛ",
   "create.create_optical.gui.goggles.beam_type": ":ǝdʎ⟘ ɯɐǝᗺ",
+  "create.create_optical.gui.goggles.optical_sensor.mode": "ǝpoW",
+  "create.create_optical.gui.goggles.optical_sensor.mode.color": "ɹoןoƆ",
+  "create.create_optical.gui.goggles.optical_sensor.mode.digital": "ןɐʇıbıᗡ",
+  "create.create_optical.gui.goggles.optical_sensor.mode.intensity": "ʎʇısuǝʇuI",
   "create.create_optical.gui.goggles.polarization": ":uoıʇɐzıɹɐןoԀ",
   "create.create_optical.gui.goggles.propagation_range": ":ǝbuɐᴚ uoıʇɐbɐdoɹԀ",
   "create.create_optical.polarization.diagonal_negative": "ןɐuobɐıᗡ ǝʌıʇɐbǝN",
@@ -62,5 +66,6 @@
   "itemGroup.create_optical.co_base": "qɐ⟘ ןɐɔıʇdO",
   "tooltip.create_optical.gui.behaviour.optical_source": "uoıʇɐzıɹɐןoԀ ɯɐǝᗺ pǝʇɐbɐdoɹԀ",
   "tooltip.create_optical.gui.goggles.absorption_polarizing_filter": ":sʇɐʇS ɹǝʇןıℲ buızıɹɐןoԀ",
-  "tooltip.create_optical.gui.goggles.beam_properties": ":sǝıʇɹǝdoɹԀ ɯɐǝᗺ"
+  "tooltip.create_optical.gui.goggles.beam_properties": ":sǝıʇɹǝdoɹԀ ɯɐǝᗺ",
+  "tooltip.create_optical.gui.goggles.optical_sensor": ":sǝıʇɹǝdoɹԀ ɹosuǝS ןɐɔıʇdO"
 }

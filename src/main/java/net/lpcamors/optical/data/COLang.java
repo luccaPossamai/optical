@@ -11,11 +11,15 @@ public class COLang {
         tooltip("gui.goggles.absorption_polarizing_filter", "Polarizing Filter Stats:");
         tooltip("gui.behaviour.optical_source", "Propagated Beam Polarization");
         tooltip("gui.goggles.beam_properties", "Beam Properties:");
+        tooltip("gui.goggles.optical_sensor", "Optical Sensor Properties:");
 
         create("gui.goggles.beam_type", "Beam Type:");
         create("gui.goggles.propagation_range", "Propagation Range:");
         create("gui.goggles.polarization", "Polarization:");
-
+        create("gui.goggles.optical_sensor.mode", "Mode");
+        create("gui.goggles.optical_sensor.mode.intensity", "Intensity");
+        create("gui.goggles.optical_sensor.mode.color", "Color");
+        create("gui.goggles.optical_sensor.mode.digital", "Digital");
 
         create("beam_type.type.radio","Radio Waves");
         create("beam_type.type.microwave","Microwaves");

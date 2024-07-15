@@ -24,11 +24,10 @@ public class AbsorptionPolarizingFilterRenderer extends SafeBlockEntityRenderer<
     protected void renderSafe(AbsorptionPolarizingFilterBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource bufferSource, int light, int overlay) {
         BlockState state = be.getBlockState();
         Direction direction = state.getValue(AbsorptionPolarizingFilter.FACING);
-        VertexConsumer vb = bufferSource.getBuffer(RenderType.cutoutMipped());
         SuperByteBuffer filter = CachedBufferer.partial(COPartialModels.POLARIZING_FILTER, state);
         BeamHelper.BeamPolarization beamPolarization = state.getValue(AbsorptionPolarizingFilter.POLARIZATION);
         if(beamPolarization != BeamHelper.BeamPolarization.RANDOM){
-            rotateFilter(filter, (float) (beamPolarization.getAngle() * Math.PI / 4), direction).light(light).renderInto(ms, bufferSource.getBuffer(RenderType.translucent()));
+            rotateFilter(filter, (float) (beamPolarization.getAngle() * Math.PI / 4), direction).light(light).renderInto(ms, bufferSource.getBuffer(RenderType.translucentNoCrumbling()));
         }
 
 

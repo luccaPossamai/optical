@@ -89,22 +89,25 @@ public class OpticalReceptorBlock extends DirectionalAxisKineticBlock implements
     }
 
     @Override
-    public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, Direction direction, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
+    public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
+        Direction direction = beamProperties.direction();
         if(state.getValue(FACING).getAxis().isVertical()){
             if(direction.getAxis().isVertical() || direction.getAxis().equals(Direction.Axis.X) == state.getValue(AXIS_ALONG_FIRST_COORDINATE)) return;
         } else {
             if(!direction.equals(state.getValue(FACING).getOpposite())) return;
         }
-
         OpticalReceptorBlockEntity opticalLaserReceptorBlockEntity = this.getBlockEntity(opticalLaserSourceBlockEntity.getLevel(), lastPos);
         if(opticalLaserReceptorBlockEntity == null) return;
+
         BlockPos pos = opticalLaserReceptorBlockEntity.getBlockPos();
-        opticalLaserReceptorBlockEntity.changeState(opticalLaserSourceBlockEntity.getBlockPos(), beamProperties);
-        if(opticalLaserSourceBlockEntity.iBeamReceiverBlockPos.contains(pos)){
-            toRemove.remove(pos);
-        } else {
-            opticalLaserSourceBlockEntity.iBeamReceiverBlockPos.add(pos);
+        if(opticalLaserReceptorBlockEntity.changeState(opticalLaserSourceBlockEntity.getBlockPos(), beamProperties)){
+            if(opticalLaserSourceBlockEntity.iBeamReceiverBlockPos.contains(pos)){
+                toRemove.remove(pos);
+            } else {
+                opticalLaserSourceBlockEntity.iBeamReceiverBlockPos.add(pos);
+            }
         }
+
     }
 
 

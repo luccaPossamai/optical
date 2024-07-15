@@ -36,7 +36,11 @@ public class COShapes {
             ABSORPTION_POLARIZING_FILTER = shape(4, 0, 0, 12, 2, 16)
                     .add(4, 14, 0, 12, 16, 16)
                     .add(7, 2, 1, 9, 14, 15)
-                    .forHorizontal(Direction.NORTH);
+                    .forHorizontal(Direction.NORTH),
+            SENSOR = shape(5, 0, 5, 11, 3, 11)
+                    .add(6, 3, 6, 10, 10, 10)
+                    .forDirectional(Direction.UP)
+                    ;
     private static AllShapes.Builder shape(VoxelShape shape) {
         return new AllShapes.Builder(shape);
     }

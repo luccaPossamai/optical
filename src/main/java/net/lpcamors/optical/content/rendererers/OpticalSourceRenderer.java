@@ -12,15 +12,15 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.COPartialModels;
+import net.lpcamors.optical.content.blocks.IBeamReceiver;
 import net.lpcamors.optical.content.blocks.optical_source.BeamHelper;
 import net.lpcamors.optical.content.blocks.optical_source.OpticalSourceBlock;
 import net.lpcamors.optical.content.blocks.optical_source.OpticalSourceBlockEntity;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
@@ -55,7 +55,7 @@ public class OpticalSourceRenderer extends KineticBlockEntityRenderer<OpticalSou
         float time = AnimationTickHolder.getRenderTime(opticalLaserSourceBlockEntity.getLevel());
         float speed = opticalLaserSourceBlockEntity.getSpeed() * 2;
         float angle = (time * speed * 3 / 10f) % 360;
-        rotateLaser(laser, angle, direction).renderInto(ms, vb);
+        rotateLaser(laser, angle, direction).light(light).renderInto(ms, vb);
         if(shouldRendererLaserBeam(opticalLaserSourceBlockEntity)){
             renderLaserBeam(opticalLaserSourceBlockEntity, partialTicks, ms, buffer, light);
         }
@@ -64,12 +64,18 @@ public class OpticalSourceRenderer extends KineticBlockEntityRenderer<OpticalSou
     public void renderLaserBeam(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, float partialTicks, PoseStack ms, MultiBufferSource multiBufferSource, int light){
         Vec3 pos = opticalLaserSourceBlockEntity.getBlockPos().getCenter();
         for(int i = 0; i < opticalLaserSourceBlockEntity.blockPosToBeamLight.size(); i ++){
-            Pair<Vec3, Vec3> pair = opticalLaserSourceBlockEntity.blockPosToBeamLight.get(i);
+            Pair<Vec3i, Vec3i> pair = opticalLaserSourceBlockEntity.blockPosToBeamLight.get(i);
             BeamHelper.BeamProperties beamProperties = opticalLaserSourceBlockEntity.beamPropertiesMap.get(pair);
             Vec3i rgb = BeamHelper.ofDyeColor(beamProperties.dyeColor());
             int alpha = (int) (beamProperties.intensity() * 255);
-            Vec3 vec = pair.getFirst();
-            Vec3 vec1 = pair.getSecond();
+            Vec3 vec = Vec3.atCenterOf(pair.getFirst());
+            Vec3 vec1 = Vec3.atCenterOf(pair.getSecond());
+
+            Vec3 v = IBeamReceiver.getLaserIrradiatedFaceOffset(beamProperties.direction(), new BlockPos(pair.getFirst()), opticalLaserSourceBlockEntity.getLevel());
+            Vec3 v1 = IBeamReceiver.getLaserIrradiatedFaceOffset(beamProperties.direction(), new BlockPos(pair.getSecond()), opticalLaserSourceBlockEntity.getLevel());
+            vec = vec.add(v);
+            vec1 = vec1.add(v1);
+
             double x = vec1.x() - vec.x();
             double y = vec1.y() - vec.y();
             double z = vec1.z() - vec.z();
@@ -77,12 +83,13 @@ public class OpticalSourceRenderer extends KineticBlockEntityRenderer<OpticalSou
             float f1 = Mth.sqrt((float) (x * x + y * y + z * z));
             ms.pushPose();
             ms.translate(0.5f, 0.5F, 0.5F);
-            ms.translate(vec.x - pos.x, vec.y - pos.y, vec.z - pos.z);
+            ms.translate(vec.x  - pos.x, vec.y - pos.y, vec.z - pos.z);
+
             ms.mulPose(Axis.YP.rotation((float)(-Math.atan2(z, x) + Math.PI / 2)));
             ms.mulPose(Axis.XP.rotation((float)(Math.atan2(f, y) - Math.PI / 2)));
             VertexConsumer vertexconsumer = multiBufferSource.getBuffer(LASER_BEAM_RENDER_TYPE);
             float t = (float) ((partialTicks + opticalLaserSourceBlockEntity.tickCount) * (1 + Math.floor(Math.abs(opticalLaserSourceBlockEntity.getSpeed()) / 16)));
-            float f2 = 0.0F - t * 0.01F;
+            float f2 = 0.0F - t * 1e-2F;
             float f3 = Mth.sqrt((float) (x * x + y * y + z * z)) / 32.0F - t * 0.01F;
             float radius = 0.05f;
             float f4 = 0.0F;

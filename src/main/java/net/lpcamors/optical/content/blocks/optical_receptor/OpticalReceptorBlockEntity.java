@@ -25,14 +25,17 @@ public class OpticalReceptorBlockEntity extends GeneratingKineticBlockEntity {
     @Override
     public void tick() {
         super.tick();
-        this.updateState();
+        if(this.updateState()){
+            this.updateGeneratedRotation();
+        }
     }
 
 
-    public void updateState(){
+    public boolean updateState(){
         BlockPos pos = this.sourceBlockPos;
-        if(this.hasLevel() && this.optionalBeamProperties.isPresent()){
-            BlockEntity blockEntity = pos == null ? null : this.level.getBlockEntity(pos);
+        Optional<BeamHelper.BeamProperties> beamProperties = this.optionalBeamProperties;
+        if(this.hasLevel() && pos != null && this.optionalBeamProperties.isPresent()){
+            BlockEntity blockEntity = this.level.getBlockEntity(pos);
             if(!(blockEntity instanceof OpticalSourceBlockEntity)) {
                 this.optionalBeamProperties = Optional.empty();
             } else {
@@ -41,14 +44,18 @@ public class OpticalReceptorBlockEntity extends GeneratingKineticBlockEntity {
                 }
             }
         }
-        this.updateGeneratedRotation();
         this.setChanged();
+        return beamProperties.equals(this.optionalBeamProperties);
     }
 
-    public void changeState(BlockPos pos, BeamHelper.BeamProperties beamProperties){
-        this.sourceBlockPos = pos;
-        this.optionalBeamProperties = Optional.of(beamProperties);
-        updateState();
+    public boolean changeState(BlockPos pos, BeamHelper.BeamProperties beamProperties){
+        if(this.optionalBeamProperties.isEmpty() || this.optionalBeamProperties.get().equals(beamProperties)){
+            this.sourceBlockPos = pos;
+            this.optionalBeamProperties = Optional.of(beamProperties);
+            updateState();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -59,13 +66,7 @@ public class OpticalReceptorBlockEntity extends GeneratingKineticBlockEntity {
     @Override
     protected void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
-
-        BeamHelper.BeamProperties beamProperties = BeamHelper.BeamProperties.read(compound);
-        if (beamProperties != null) {
-            this.optionalBeamProperties = Optional.of(beamProperties);
-        } else {
-            this.optionalBeamProperties = Optional.empty();
-        }
+        this.optionalBeamProperties = BeamHelper.BeamProperties.read(compound);
 
         if (!clientPacket)
             return;

@@ -58,7 +58,8 @@ public class AbsorptionPolarizingFilter extends HorizontalDirectionalBlock imple
     }
 
     @Override
-    public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, Direction direction, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
+    public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
+        Direction direction = beamProperties.direction();
         if(direction.getAxis().isVertical() || direction.getAxis().equals(state.getValue(FACING).getAxis())) return;
         BeamHelper.BeamPolarization beamPolarization = state.getValue(POLARIZATION);
         if(beamPolarization.isDiagonal()){
@@ -68,8 +69,8 @@ public class AbsorptionPolarizingFilter extends HorizontalDirectionalBlock imple
         }
         float intensity = beamProperties.beamPolarization().getRemainingIntensity(beamProperties.intensity(), beamPolarization);
         if(intensity > 0){
-            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), intensity, beamPolarization, beamProperties.dyeColor());
-            opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos, direction, beamProperties1, toRemove, lastIndex);
+            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), intensity, beamPolarization, beamProperties.dyeColor(), direction);
+            opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos, beamProperties1, toRemove, lastIndex);
         }
     }
 

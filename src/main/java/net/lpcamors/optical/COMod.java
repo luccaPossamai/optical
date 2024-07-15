@@ -15,16 +15,15 @@ import net.lpcamors.optical.ponder.COPonderIndex;
 import net.lpcamors.optical.ponder.COPonderTags;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+
 @Mod(COMod.ID)
 public class COMod {
     public static final String ID = "create_optical";
@@ -42,36 +41,28 @@ public class COMod {
     public COMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::commonSetup);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(this::clientSetup));
-
-
-        COCreativeModeTabs.initiate(modEventBus);
 
         REGISTRATE.registerEventListeners(modEventBus);
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> COPartialModels::new);
+
+        COCreativeModeTabs.initiate(modEventBus);
 
         COBlocks.initiate();
         COItems.initiate();
         COBlockEntities.initiate();
         COLang.initiate();
-        MinecraftForge.EVENT_BUS.register(this);
 
         modEventBus.addListener(EventPriority.LOWEST, CODataGen::dataGen);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(this::clientSetup));
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {}
 
     private void clientSetup(final FMLClientSetupEvent event) {
-        COPartialModels.initiate();
         COPonderIndex.initiate();
         COPonderTags.initiate();
     }
 
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {}
-
-    @Mod.EventBusSubscriber(modid = ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {}
-    }
 }

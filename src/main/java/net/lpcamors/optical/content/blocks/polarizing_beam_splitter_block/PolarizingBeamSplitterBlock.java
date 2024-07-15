@@ -42,18 +42,19 @@ public class PolarizingBeamSplitterBlock extends HorizontalDirectionalBlock impl
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getClockWise());
     }
     @Override
-    public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, Direction direction, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
+    public void receive(OpticalSourceBlockEntity opticalLaserSourceBlockEntity, BlockState state, BlockPos lastPos, BeamHelper.BeamProperties beamProperties, List<BlockPos> toRemove, int lastIndex) {
+        Direction direction = beamProperties.direction();
         if(direction.getAxis().isVertical()) return;
         float intensity = beamProperties.beamPolarization().getRemainingIntensity(beamProperties.intensity(), BeamHelper.BeamPolarization.VERTICAL);
         if(intensity > 0){
-            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), intensity, BeamHelper.BeamPolarization.VERTICAL, beamProperties.dyeColor());
-            opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos, direction, beamProperties1, toRemove, lastIndex);
+            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), intensity, BeamHelper.BeamPolarization.VERTICAL, beamProperties.dyeColor(), direction);
+            opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos,  beamProperties1, toRemove, lastIndex);
         }
         intensity = beamProperties.beamPolarization().getRemainingIntensity(beamProperties.intensity(), BeamHelper.BeamPolarization.HORIZONTAL);
         if(intensity > 0){
             direction = direction.getAxis().equals(state.getValue(FACING).getAxis()) ? direction.getClockWise() : direction.getCounterClockWise();
-            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), intensity, BeamHelper.BeamPolarization.HORIZONTAL, beamProperties.dyeColor());
-            opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos, direction, beamProperties1, toRemove, lastIndex);
+            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed(), intensity, BeamHelper.BeamPolarization.HORIZONTAL, beamProperties.dyeColor(), direction);
+            opticalLaserSourceBlockEntity.propagateLinearBeamVar(lastPos, beamProperties1, toRemove, lastIndex);
         }
 
 

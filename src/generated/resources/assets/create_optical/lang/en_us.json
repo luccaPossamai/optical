@@ -11,6 +11,10 @@
   "create.create_optical.beam_type.type.range": "Block Range:",
   "create.create_optical.beam_type.type.visible": "Visible Light",
   "create.create_optical.gui.goggles.beam_type": "Beam Type:",
+  "create.create_optical.gui.goggles.optical_sensor.mode": "Mode",
+  "create.create_optical.gui.goggles.optical_sensor.mode.color": "Color",
+  "create.create_optical.gui.goggles.optical_sensor.mode.digital": "Digital",
+  "create.create_optical.gui.goggles.optical_sensor.mode.intensity": "Intensity",
   "create.create_optical.gui.goggles.polarization": "Polarization:",
   "create.create_optical.gui.goggles.propagation_range": "Propagation Range:",
   "create.create_optical.polarization.diagonal_negative": "Negative Diagonal",
@@ -62,5 +66,6 @@
   "itemGroup.create_optical.co_base": "Optical Tab",
   "tooltip.create_optical.gui.behaviour.optical_source": "Propagated Beam Polarization",
   "tooltip.create_optical.gui.goggles.absorption_polarizing_filter": "Polarizing Filter Stats:",
-  "tooltip.create_optical.gui.goggles.beam_properties": "Beam Properties:"
+  "tooltip.create_optical.gui.goggles.beam_properties": "Beam Properties:",
+  "tooltip.create_optical.gui.goggles.optical_sensor": "Optical Sensor Properties:"
 }

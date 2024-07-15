@@ -15,8 +15,8 @@ import net.lpcamors.optical.content.blocks.optical_receptor.OpticalReceptorBlock
 import net.lpcamors.optical.content.blocks.optical_receptor.OpticalReceptorGenerator;
 import net.lpcamors.optical.content.blocks.optical_source.OpticalSourceBlock;
 import net.lpcamors.optical.content.blocks.polarizing_beam_splitter_block.PolarizingBeamSplitterBlock;
-import net.lpcamors.optical.data.blockstates.OpticalSensorBlockState;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.MapColor;
 
@@ -68,7 +68,7 @@ public class COBlocks {
                     .properties(properties -> properties.mapColor(MapColor.COLOR_GRAY))
                     .transform(TagGen.axeOrPickaxe())
                     .blockstate(BlockStateGen.horizontalBlockProvider(true))
-                    .addLayer(() -> RenderType::translucent)
+                    .addLayer(() -> RenderType::solid)
                     .item()
                     .transform(ModelGen.customItemModel())
                     .register();
@@ -86,8 +86,9 @@ public class COBlocks {
     public static final BlockEntry<OpticalSensorBlock> OPTICAL_SENSOR =
             COMod.REGISTRATE.block("optical_sensor", OpticalSensorBlock::new)
                     .initialProperties(() -> Blocks.REPEATER)
-                    .blockstate(new OpticalSensorBlockState()::generate)
-                    .addLayer(() -> RenderType::cutoutMipped)
+                    .properties(p -> p.mapColor(DyeColor.GRAY).lightLevel(OpticalSensorBlock::getLight))
+                    .blockstate(BlockStateGen.directionalBlockProvider(true))
+                    .addLayer(() -> RenderType::translucent)
                     .item()
                     .transform(ModelGen.customItemModel())
                     .register();
