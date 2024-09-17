@@ -51,11 +51,11 @@ public class BeamHelper {
         public boolean forceVisibility = false;
         public boolean forcePenetration = false;
 
-        public BeamProperties(float speed, Direction direction){
-            this(speed, BeamPolarization.RANDOM, direction);
+        public BeamProperties(float speed, Direction direction, BeamType beamType){
+            this(speed, BeamPolarization.RANDOM, direction, beamType);
         }
-        public BeamProperties(float speed, BeamPolarization beamPolarization, Direction direction){
-            this(speed, 1, beamPolarization, DyeColor.WHITE, direction);
+        public BeamProperties(float speed, BeamPolarization beamPolarization, Direction direction, BeamType beamType){
+            this(speed, 1, beamPolarization, DyeColor.WHITE, direction, beamType);
         }
 
         public BeamProperties(float speed, float intensity, BeamPolarization beamPolarization, DyeColor dyeColor, Direction direction) {
@@ -73,7 +73,8 @@ public class BeamHelper {
 
         public static BeamProperties sum(Direction direction, List<BeamProperties> beamProperties) {
             float speed = 0;
-            BeamPolarization beamPolarization = beamProperties.get(0).beamPolarization;
+            BeamPolarization beamPolarization = BeamPolarization.RANDOM;
+            boolean forcePol = false;
             DyeColor color = null;
             BeamType type = null;
             boolean hasVisible = false;
@@ -84,9 +85,16 @@ public class BeamHelper {
                     signal = (int) (beamProperties1.speed / Math.abs(beamProperties1.speed));
                 }
                 speed += Math.abs(beamProperties1.speed) * beamProperties1.intensity;
-                if(beamPolarization != beamProperties1.beamPolarization) beamPolarization = beamProperties1.beamPolarization;
+                if(!forcePol && beamPolarization != beamProperties1.beamPolarization && beamProperties1.beamPolarization != BeamPolarization.RANDOM) {
+                    if(beamPolarization != BeamPolarization.RANDOM){
+                        beamPolarization = BeamPolarization.RANDOM;
+                        forcePol = true;
+                    } else {
+                        beamPolarization = beamProperties1.beamPolarization;
+                    }
+                }
                 if(beamProperties1.beamType.visible()){
-                    hasVisible = beamProperties1.getType().visible();
+                    hasVisible = true;
                     if(color == null) {
                         color = beamProperties1.dyeColor;
                     } else if(color != beamProperties1.dyeColor) {
@@ -145,6 +153,7 @@ public class BeamHelper {
             tagInts.add(IntTag.valueOf(this.direction == null ? 0 : List.of(Direction.values()).indexOf(direction)));
             tagInts.add(IntTag.valueOf(this.forceVisibility ? 1 : 0));
             tagInts.add(IntTag.valueOf(this.forcePenetration ? 1 : 0));
+            tagInts.add(IntTag.valueOf(this.beamType.id));
 
             listTag.add(tagFloats);
             listTag.add(tagInts);
@@ -158,7 +167,7 @@ public class BeamHelper {
                 ListTag listTag = (ListTag) compoundTag.get("BeamProperties");
                 ListTag tagFloats = listTag.getList(0);
                 ListTag tagInts = listTag.getList(1);
-                BeamProperties beamProperties = new BeamProperties(((FloatTag) tagFloats.get(0)).getAsFloat(), ((FloatTag) tagFloats.get(1)).getAsFloat(), BeamPolarization.values()[((IntTag)tagInts.get(0)).getAsInt()], DyeColor.byId(((IntTag)tagInts.get(1)).getAsInt()), Direction.values()[tagInts.getInt(2)]);
+                BeamProperties beamProperties = new BeamProperties(((FloatTag) tagFloats.get(0)).getAsFloat(), ((FloatTag) tagFloats.get(1)).getAsFloat(), BeamPolarization.values()[((IntTag)tagInts.get(0)).getAsInt()], DyeColor.byId(((IntTag)tagInts.get(1)).getAsInt()), Direction.values()[tagInts.getInt(2)], BeamType.values()[((IntTag)tagInts.get(5)).getAsInt()]);
                 beamProperties.forceVisibility = tagInts.getInt(3) == 1;
                 beamProperties.forcePenetration = tagInts.getInt(4) == 1;
                 return Optional.of(beamProperties);

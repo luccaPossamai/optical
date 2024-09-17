@@ -70,7 +70,7 @@ public class OpticalSourceBlockEntityVar extends KineticBlockEntity implements I
 
     @Override
     public BeamHelper.BeamProperties getInitialBeamProperties() {
-        return new BeamHelper.BeamProperties(this.getSpeed(), this.polarization.get(), this.getBlockState().getValue(OpticalSourceBlock.HORIZONTAL_FACING));
+        return new BeamHelper.BeamProperties(this.getSpeed(), this.polarization.get(), this.getBlockState().getValue(OpticalSourceBlock.HORIZONTAL_FACING), BeamHelper.BeamType.getTypeBySpeed(this.speed));
     }
 
 
@@ -106,7 +106,7 @@ public class OpticalSourceBlockEntityVar extends KineticBlockEntity implements I
                 // Check if there is a BeaconBeamBlock in the way(colorizes the beam)
             } else if(state.getBlock() instanceof BeaconBeamBlock beaconBeamBlock) {
                 this.addToBeamBlocks(initialPos, vec3, beamProperties);
-                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, beamProperties.intensity, beamProperties.beamPolarization, beaconBeamBlock.getColor(), direction);
+                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, beamProperties.intensity, beamProperties.beamPolarization, beaconBeamBlock.getColor(), direction, beamType);
                 this.propagateLinearBeamVar(lastPos, beamProperties1, i + 1);
                 break;
 

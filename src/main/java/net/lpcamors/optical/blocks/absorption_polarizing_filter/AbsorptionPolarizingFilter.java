@@ -67,7 +67,7 @@ public class AbsorptionPolarizingFilter extends HorizontalDirectionalBlock imple
         }
         float intensity = beamProperties.beamPolarization.getRemainingIntensity(beamProperties.intensity, beamPolarization);
         if(intensity > 0){
-            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, intensity, beamPolarization, beamProperties.dyeColor, direction);
+            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, intensity, beamPolarization, beamProperties.dyeColor, direction, beamProperties.beamType);
             IBeamSource.propagateLinearBeamVar(iBeamSource, lastPos, beamProperties1, lastIndex);
         }
     }

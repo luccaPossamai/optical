@@ -48,8 +48,8 @@ public interface IBeamSource {
         if(iBeamSource.getInitialBeamProperties() == null) return;
         BlockPos lastPos = initialPos;
         Direction direction = beamProperties.direction;
-        int range = iBeamSource.getInitialBeamProperties().getType().getRange();
         BeamHelper.BeamType beamType = iBeamSource.getInitialBeamProperties().getType();
+        int range = beamType.getRange();
         for (int i = 0; i + lastIndex <= range; i++) {
             lastPos = lastPos.relative(direction);
             Vec3i vec3 = lastPos;
@@ -76,7 +76,7 @@ public interface IBeamSource {
                 // Check if there is a BeaconBeamBlock in the way(colorizes the beam)
             } else if(state.getBlock() instanceof BeaconBeamBlock beaconBeamBlock) {
                 iBeamSource.addToBeamBlocks(initialPos, vec3, beamProperties);
-                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, beamProperties.intensity, beamProperties.beamPolarization, beaconBeamBlock.getColor(), direction);
+                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, beamProperties.intensity, beamProperties.beamPolarization, beaconBeamBlock.getColor(), direction, beamProperties.beamType);
                 IBeamSource.propagateLinearBeamVar(iBeamSource, lastPos, beamProperties1, i + 1);
                 break;
 
@@ -117,7 +117,7 @@ public interface IBeamSource {
             ms.mulPose(Axis.YP.rotation((float)(-Math.atan2(z, x) + Math.PI / 2)));
             ms.mulPose(Axis.XP.rotation((float)(Math.atan2(f, y) - Math.PI / 2)));
             VertexConsumer vertexconsumer = multiBufferSource.getBuffer(RenderTypes.getGlowingTranslucent(LASER_BEAM_LOCATION));
-            float t = (float) ((partialTicks + iBeamSource.getTickCount()) * (1 + Math.floor(Math.abs(iBeamSource.getInitialBeamProperties().speed) / 16)));
+            float t = (float) ((partialTicks + iBeamSource.getTickCount()) * (1 + Math.floor(Math.abs(iBeamSource.getInitialBeamProperties().speed) / 64)));
             float f2 = 0.0F - t * 1e-2F;
             float f3 = Mth.sqrt((float) (x * x + y * y + z * z)) / 32.0F - t * 0.01F;
             float radius = 0.05f;
@@ -127,12 +127,11 @@ public interface IBeamSource {
             PoseStack.Pose posestack$pose = ms.last();
             Matrix4f matrix4f = posestack$pose.pose();
             Matrix3f matrix3f = posestack$pose.normal();
-            for(int k = 0; k < 3 + Math.floor(beamProperties.speed / 128) ; k++) {
+            for(int k = 0; k < 3 + Math.floor(Math.abs(beamProperties.intensity * beamProperties.speed) / 64) ; k++) {
                 if(k > 0) {
                     radius *= 1.2F;
                     vertexconsumer = multiBufferSource.getBuffer(RenderTypes.getOutlineTranslucent(LASER_BEAM_LOCATION, true));
-                    //vertexconsumer = multiBufferSource.getBuffer(RenderType.entityTranslucent(LASER_BEAM_LOCATION));
-                    alpha = (int) (alpha * 0.5F);
+                    alpha = (int) (alpha * 0.75F);
                 }
                 for (int j = 1; j <= 8; ++j) {
                     float f7 = Mth.sin((float) j * ((float) Math.PI * 2F) / 8.0F) * radius;

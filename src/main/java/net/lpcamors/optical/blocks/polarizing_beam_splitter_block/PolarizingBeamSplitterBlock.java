@@ -44,13 +44,13 @@ public class PolarizingBeamSplitterBlock extends HorizontalDirectionalBlock impl
         if(direction.getAxis().isVertical()) return;
         float intensity = beamProperties.beamPolarization.getRemainingIntensity(beamProperties.intensity, BeamHelper.BeamPolarization.VERTICAL);
         if(intensity > 0){
-            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, intensity, BeamHelper.BeamPolarization.VERTICAL, beamProperties.dyeColor, direction);
+            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, intensity, BeamHelper.BeamPolarization.VERTICAL, beamProperties.dyeColor, direction, beamProperties.beamType);
             IBeamSource.propagateLinearBeamVar(iBeamSource, lastPos,  beamProperties1, lastIndex);
         }
         intensity = beamProperties.beamPolarization.getRemainingIntensity(beamProperties.intensity, BeamHelper.BeamPolarization.HORIZONTAL);
         if(intensity > 0){
             direction = direction.getAxis().equals(state.getValue(FACING).getAxis()) ? direction.getClockWise() : direction.getCounterClockWise();
-            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, intensity, BeamHelper.BeamPolarization.HORIZONTAL, beamProperties.dyeColor, direction);
+            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, intensity, BeamHelper.BeamPolarization.HORIZONTAL, beamProperties.dyeColor, direction, beamProperties.beamType);
             IBeamSource.propagateLinearBeamVar(iBeamSource, lastPos, beamProperties1, lastIndex);
         }
 

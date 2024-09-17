@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +50,11 @@ public class BeamCondenserBlock extends HorizontalDirectionalBlock implements IB
         if(be.changeState(direction, iBeamSource.getBlockPos(), beamProperties)){
             iBeamSource.addDependent(pos);
         }
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
+        return super.isPathfindable(p_60475_, p_60476_, p_60477_, p_60478_);
     }
 
     @Override

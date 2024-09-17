@@ -25,10 +25,12 @@ public class FocusingAssemblySubcategory extends SequencedAssemblySubCategory {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {
-        IRecipeSlotBuilder slot = builder
-                .addSlot(RecipeIngredientRole.CATALYST, x + 4, 15)
-                .setBackground(CreateRecipeCategory.getRenderedSlot(), -1, -1)
-                .addIngredients(recipe.getRecipe().getIngredients().get(1));
+        if(recipe.getRecipe().getIngredients().size() > 1) {
+            IRecipeSlotBuilder slot = builder
+                    .addSlot(RecipeIngredientRole.CATALYST, x + 4, 15)
+                    .setBackground(CreateRecipeCategory.getRenderedSlot(), -1, -1)
+                    .addIngredients(recipe.getRecipe().getIngredients().get(1));
+        }
 
     }
 

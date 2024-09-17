@@ -60,7 +60,7 @@ public class OpticalSourceBlockEntity extends KineticBlockEntity {
         }
         if(Math.abs(this.getSpeed()) > 0){
             this.beamType = BeamHelper.BeamType.getTypeBySpeed(this.getSpeed());
-            this.initialBeamProperties = new BeamHelper.BeamProperties(this.getSpeed(), this.polarization.get(), this.getBlockState().getValue(OpticalSourceBlock.HORIZONTAL_FACING));
+            this.initialBeamProperties = new BeamHelper.BeamProperties(this.getSpeed(), this.polarization.get(), this.getBlockState().getValue(OpticalSourceBlock.HORIZONTAL_FACING), this.beamType);
             this.tickCount++;
             this.blockPosToBeamLight.clear();
             this.beamPropertiesMap.clear();
@@ -103,7 +103,7 @@ public class OpticalSourceBlockEntity extends KineticBlockEntity {
             // Check if there is a BeaconBeamBlock in the way(colorizes the beam)
             } else if(state.getBlock() instanceof BeaconBeamBlock beaconBeamBlock) {
                 this.addToBeamBlocks(initialPos, vec3, beamProperties);
-                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, beamProperties.intensity, beamProperties.beamPolarization, beaconBeamBlock.getColor(), direction);
+                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, beamProperties.intensity, beamProperties.beamPolarization, beaconBeamBlock.getColor(), direction, beamType);
                 this.propagateLinearBeamVar(lastPos, beamProperties1, toRemove, i + 1);
                 break;
 

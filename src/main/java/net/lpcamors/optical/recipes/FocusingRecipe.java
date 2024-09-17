@@ -29,22 +29,8 @@ public class FocusingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
 
     private static final String REQUIRED_BEAM_TYPE_KEY = "required_beam_type";
 
-
-    //*
     public FocusingRecipeParams.BeamTypeCondition beamTypeCondition = FocusingRecipeParams.BeamTypeCondition.NONE;
-//    public static FocusingRecipeInfo INFO_RADIO = new FocusingRecipeInfo("radio", (SequencedAssemblyFocusingRecipeSerializer) CORecipeTypes.RADIO_SERIALIZER.get(), CORecipeTypes.FOCUSING.get());
-//    public static FocusingRecipeInfo INFO_MICROWAVE = new FocusingRecipeInfo("microwave", (SequencedAssemblyFocusingRecipeSerializer) CORecipeTypes.MICROWAVE_SERIALIZER.get(), CORecipeTypes.FOCUSING.get());
-//    public static FocusingRecipeInfo INFO_VISIBLE = new FocusingRecipeInfo("visible", (SequencedAssemblyFocusingRecipeSerializer) CORecipeTypes.VISIBLE_SERIALIZER.get(), CORecipeTypes.FOCUSING.get());
-//    public static FocusingRecipeInfo INFO_GAMMA = new FocusingRecipeInfo("visible", (SequencedAssemblyFocusingRecipeSerializer) CORecipeTypes.GAMMA_SERIALIZER.get(), CORecipeTypes.FOCUSING.get());
-//    public static FocusingRecipeInfo INFO_NONE = new FocusingRecipeInfo("none", (SequencedAssemblyFocusingRecipeSerializer) CORecipeTypes.NONE_SERIALIZER.get(), CORecipeTypes.FOCUSING.get());
-//
-//    public static Map<FocusingRecipeParams.BeamTypeCondition, FocusingRecipeInfo> MAP_INFO = Map.of(
-//            FocusingRecipeParams.BeamTypeCondition.RADIO, INFO_RADIO,
-//            FocusingRecipeParams.BeamTypeCondition.MICROWAVE, INFO_MICROWAVE,
-//            FocusingRecipeParams.BeamTypeCondition.VISIBLE, INFO_VISIBLE,
-//            FocusingRecipeParams.BeamTypeCondition.GAMMA, INFO_GAMMA,
-//            FocusingRecipeParams.BeamTypeCondition.NONE, INFO_NONE
-//    );
+
     public static FocusingRecipe radio(ProcessingRecipeBuilder.ProcessingRecipeParams params){
         FocusingRecipe f = new FocusingRecipe(params);
         f.beamTypeCondition = FocusingRecipeParams.BeamTypeCondition.RADIO;
@@ -135,6 +121,11 @@ public class FocusingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
     public int getProcessingDuration() {
         int i = super.getProcessingDuration();
         return i == 0 ? BeamFocuserBlockEntity.PROCESSING_TICK : i;
+    }
+
+    @Override
+    protected boolean canSpecifyDuration() {
+        return true;
     }
 
     public FocusingRecipeParams.BeamTypeCondition getRequiredBeamType() {
