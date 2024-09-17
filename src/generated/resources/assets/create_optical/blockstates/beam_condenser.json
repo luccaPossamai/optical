@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "create_optical:block/beam_condenser/block",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "create_optical:block/beam_condenser/block"
+    },
+    "facing=south": {
+      "model": "create_optical:block/beam_condenser/block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create_optical:block/beam_condenser/block",
+      "y": 270
+    }
+  }
+}

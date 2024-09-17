@@ -7,12 +7,15 @@
     },
     "M": {
       "item": "create_optical:mirror"
+    },
+    "S": {
+      "item": "create:shaft"
     }
   },
   "pattern": [
     "A",
     "M",
-    "A"
+    "S"
   ],
   "result": {
     "item": "create_optical:encased_mirror"

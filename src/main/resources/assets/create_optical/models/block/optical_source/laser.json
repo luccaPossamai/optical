@@ -1,21 +1,21 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
+	"render_type": "minecraft:solid",
+	"texture_size": [32, 32],
 	"textures": {
-		"0": "create_optical:block/optical_source/optical_source_laser",
-		"particle": "create_optical:block/optical_source/optical_source_laser"
+		"2": "create_optical:block/optical_source/optical_source_laser"
 	},
 	"elements": [
 		{
 			"from": [5.5, 5.5, 0],
 			"to": [10.5, 10.5, 8],
 			"faces": {
-				"north": {"uv": [5, 10, 10, 15], "rotation": 270, "texture": "#0"},
-				"east": {"uv": [0, 0, 5, 8], "rotation": 90, "texture": "#0"},
-				"south": {"uv": [5, 10, 10, 15], "rotation": 90, "texture": "#0"},
-				"west": {"uv": [0, 8, 5, 16], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [5, 0, 13, 5], "rotation": 90, "texture": "#0"},
-				"down": {"uv": [5, 5, 13, 10], "rotation": 90, "texture": "#0"}
+				"north": {"uv": [4, 0, 6.5, 2.5], "texture": "#2"},
+				"east": {"uv": [0, 2.5, 4, 5], "texture": "#2"},
+				"west": {"uv": [0, 5, 4, 2.5], "rotation": 180, "texture": "#2"},
+				"up": {"uv": [0, 0, 4, 2.5], "rotation": 270, "texture": "#2"},
+				"down": {"uv": [0, 5, 4, 7.5], "rotation": 90, "texture": "#2"}
 			}
 		}
 	]

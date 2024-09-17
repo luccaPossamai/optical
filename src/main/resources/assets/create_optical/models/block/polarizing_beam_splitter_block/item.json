@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
+	"render_type": "minecraft:transparent",
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "create:block/andesite_casing",

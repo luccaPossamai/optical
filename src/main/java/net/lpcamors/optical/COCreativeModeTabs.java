@@ -3,8 +3,8 @@ package net.lpcamors.optical;
 import com.simibubi.create.foundation.utility.Components;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import net.lpcamors.optical.content.blocks.COBlocks;
-import net.lpcamors.optical.content.items.COItems;
+import net.lpcamors.optical.blocks.COBlocks;
+import net.lpcamors.optical.items.COItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.*;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -38,10 +38,12 @@ public class COCreativeModeTabs {
         static {
             Set<Item> exclusions = new ReferenceOpenHashSet<>();
             List<ItemProviderEntry<?>> excludedItems = List.of(
+                    COItems.INCOMPLETE_COPPER_COIL,
                     COItems.INCOMPLETE_GOLDEN_COIL,
+                    COItems.INCOMPLETE_QUARTZ_CATALYST_COIL,
                     COItems.INCOMPLETE_MIRROR,
                     COItems.INCOMPLETE_POLARIZING_FILTER,
-                    COItems.INCOMPLETE_LASER
+                    COItems.INCOMPLETE_OPTICAL_DEVICE
             );
             for (ItemProviderEntry<?> entry : excludedItems) {
                 exclusions.add(entry.asItem());

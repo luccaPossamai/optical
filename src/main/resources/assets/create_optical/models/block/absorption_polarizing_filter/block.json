@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "minecraft:solid",
 	"parent": "block/block",
 	"texture_size": [32, 32],
 	"textures": {

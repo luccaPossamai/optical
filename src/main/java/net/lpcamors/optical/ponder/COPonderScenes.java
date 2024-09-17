@@ -1,13 +1,21 @@
 package net.lpcamors.optical.ponder;
 
+import com.simibubi.create.AllItems;
+import com.simibubi.create.content.kinetics.press.PressingBehaviour;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.ponder.*;
+import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
+import net.lpcamors.optical.blocks.beam_focuser.BeamFocuserBlockEntity;
+import net.lpcamors.optical.blocks.optical_sensor.OpticalSensorBlock;
+import net.lpcamors.optical.items.COItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
+import oshi.jna.platform.mac.SystemConfiguration;
 
 public class COPonderScenes {
 
@@ -183,7 +191,8 @@ public class COPonderScenes {
         BlockPos receptor = util.grid.at(0,1, 0);
         Selection sourceSystemSelect = util.select.fromTo(4, 1, 2, 5, 1, 2);
         Selection bigWheelSelect = util.select.position(5, 0, 1);
-        Selection receptorSystemSelect = util.select.fromTo(0, 1, 0, 1, 1, 0).add(util.select.position(0 , 1, 2));
+        Selection receptorSystemSelect = util.select.fromTo(0, 1, 0, 1, 1, 0);
+        Selection mirror = util.select.position(0 , 1, 2);
         BlockPos filterPos0 = util.grid.at(1, 1, 2);
         Selection filterSelection0 = util.select.position(filterPos0);
         BlockPos filterPos1 = util.grid.at(3, 1, 2);
@@ -193,6 +202,7 @@ public class COPonderScenes {
         scene.idle(5);
         scene.world.showSection(sourceSystemSelect, Direction.DOWN);
         scene.world.showSection(receptorSystemSelect, Direction.DOWN);
+        scene.world.showSection(mirror, Direction.DOWN);
         scene.idle(5);
         changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 0);
         scene.idle(10);
@@ -251,13 +261,13 @@ public class COPonderScenes {
         scene.configureBasePlate(0, 0, 5);
 
         BlockPos source = util.grid.at(4,1, 3);
-        BlockPos polCube = util.grid.at(3, 1, 3);
-        BlockPos mirror = util.grid.at(3, 1, 0);
-        Selection polCubeSelect = util.select.position(polCube);
-        Selection mirrorSelect = util.select.position(mirror);
+        BlockPos polCube = util.grid.at(2, 1, 3 );
+        BlockPos mirror = util.grid.at(2, 1, 0);
+        Selection polCubeSelect = util.select.position(polCube).add(util.select.position(3,1,3));
+        Selection select = util.select.position(mirror).add(util.select.position(0,1,0)).add(util.select.position(0,1,3));
 
-        Selection polarizedBeamVertical = util.select.fromTo(0, 1, 3, 2, 1, 3);
-        Selection polarizedBeamHorizontal = util.select.fromTo(3,1, 1, 3, 1, 2).add(util.select.fromTo(0, 1, 0, 2, 1, 0));
+        Selection polarizedBeamVertical = util.select.fromTo(1, 1, 3, 1, 1, 3);
+        Selection polarizedBeamHorizontal = util.select.fromTo(2,1, 2, 2, 1, 1).add(util.select.fromTo(1, 1, 0, 1, 1, 0));
 
         Selection sourceSystemSelect = util.select.fromTo(4, 1, 3, 5, 1, 3);
         Selection bigWheelSelect = util.select.position(5, 0, 2);
@@ -268,11 +278,11 @@ public class COPonderScenes {
         scene.idle(5);
         scene.world.showSection(polCubeSelect, Direction.DOWN);
         scene.idle(5);
-        scene.world.showSection(mirrorSelect, Direction.DOWN);
+        scene.world.showSection(select, Direction.DOWN);
         scene.idle(5);
         changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 0);
         scene.idle(10);
-        changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 32);
+        changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 64);
         scene.effects.indicateSuccess(source);
         scene.overlay.showText(40)
                 .independent(0)
@@ -302,17 +312,21 @@ public class COPonderScenes {
         BlockPos source = util.grid.at(4,1, 2);
         BlockPos sensor = util.grid.at(1, 1, 2);
         BlockPos pol = util.grid.at(2, 1, 2);
+        BlockPos glass = util.grid.at(3, 1, 2);
         BlockPos tube = util.grid.at(1, 2, 3);
+        Vec3 sensorCenter = util.vector.blockSurface(sensor, Direction.UP).add(0, -8 / 16F, 0);
         Selection sourceSystemSelect = util.select.fromTo(4, 1, 2, 5, 1, 2);
         Selection bigWheelSelect = util.select.position(5, 0, 2);
         Selection sensorGroupSelect = util.select.fromTo(1, 1, 2, 1, 2, 3);
         Selection tubeSelect = util.select.position(tube);
         scene.idle(5);
+        scene.world.modifyBlock(sensor, state -> state.setValue(OpticalSensorBlock.MODE, OpticalSensorBlock.Mode.INTENSITY), false);
         scene.world.showSection(util.select.layer(0), Direction.UP);
         scene.idle(5);
         scene.world.showSection(sourceSystemSelect, Direction.DOWN);
         scene.idle(5);
         scene.world.showSection(sensorGroupSelect, Direction.DOWN);
+        scene.world.showSection(tubeSelect, Direction.UP);
         scene.idle(5);
         changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 0);
         scene.idle(10);
@@ -326,7 +340,17 @@ public class COPonderScenes {
                 .attachKeyFrame()
                 .independent(0)
                 .text("Optical sensors emits redstone signal if a beam hits it.")
-                .pointAt(util.vector.blockSurface(sensor, Direction.UP));
+                .pointAt(sensorCenter);
+        scene.idle(60);
+        Vec3 blockSurface = util.vector.blockSurface(sensor, Direction.UP)
+                .add(0, -8 / 16F, 0);
+        scene.overlay.showFilterSlotInput(blockSurface, Direction.NORTH, 80);
+        scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick().whileSneaking(), 60);
+        scene.overlay.showText(40)
+                .attachKeyFrame()
+                .independent(0)
+                .text("You can change the criteria of the redstone level mapping by shift + right click.")
+                .pointAt(sensorCenter);
         scene.idle(60);
         scene.world.showSection(util.select.position(pol), Direction.DOWN);
         scene.idle(5);
@@ -334,11 +358,212 @@ public class COPonderScenes {
         scene.overlay.showText(40)
                 .attachKeyFrame()
                 .independent(0)
-                .text("The emitted signal is reduced based on the intensity of the incident beam.")
+                .text("The intensity mode makes a reduction based on the intensity of the incident beam.")
                 .pointAt(util.vector.blockSurface(tube, Direction.UP));
+        scene.idle(60);
+        scene.overlay.showFilterSlotInput(blockSurface, Direction.NORTH, 40);
+        scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick().whileSneaking(), 30);
+        scene.world.modifyBlock(sensor, state -> state.setValue(OpticalSensorBlock.MODE, OpticalSensorBlock.Mode.COLOR), false);
+        scene.idle(10);
+        scene.world.hideSection(util.select.position(pol), Direction.UP);
+        scene.world.showSection(util.select.position(glass), Direction.UP);
+        scene.world.modifyBlockEntityNBT(tubeSelect, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 6));
+
+        scene.overlay.showText(40)
+                .attachKeyFrame()
+                .independent(0)
+                .text("The color mode maps a specific color to an specific color.")
+                .pointAt(util.vector.blockSurface(tube, Direction.UP));
+        scene.idle(60);
+        scene.overlay.showFilterSlotInput(blockSurface, Direction.NORTH, 40);
+        scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick().whileSneaking(), 30);
+        scene.world.modifyBlock(sensor, state -> state.setValue(OpticalSensorBlock.MODE, OpticalSensorBlock.Mode.DIGITAL), false);
+        scene.idle(10);
+        scene.world.modifyBlockEntityNBT(tubeSelect, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 15));
+
+        scene.overlay.showText(40)
+                .attachKeyFrame()
+                .independent(0)
+                .text("The digital mode make the block full signal if there is a beam incident, if it don't have, then zero redstone signal.")
+                .pointAt(util.vector.blockSurface(tube, Direction.UP));
+        scene.idle(60);
+        scene.overlay.showText(40)
+                .independent(0)
+                .text("The block also absorb the color of the beam and produces light.")
+                .pointAt(sensorCenter);
         scene.idle(60);
 
     }
+
+    public static void condenser(SceneBuilder scene, SceneBuildingUtil util) {
+        scene.title("opticals.condenser", "Condenser and Receptor's heaviness");
+        scene.configureBasePlate(0, 0, 5);
+
+        Selection middleSourceSelect = util.select.fromTo(3, 1, 2, 4,1,2).add(util.select.fromTo(5,1,0, 5, 1, 5));
+        Selection leftSourceSelect = util.select.fromTo(4, 1, 4, 4,1,4);
+        Selection rightSourceSelect = util.select.fromTo(4, 1, 0, 4,1,0);
+        Selection resultantBeamSelection = util.select.fromTo(0,1,2,1,1,2);
+        Selection leftMirror = util.select.fromTo(2,1,3,3,1,4);
+        Selection rightMirror = util.select.fromTo(2,1,0,3,1,1);
+        BlockPos condenser = util.grid.at(2,1,2);
+        BlockPos receptor = util.grid.at(0, 1, 2);
+        Selection condenserSelect = util.select.position(condenser);
+        Selection receptorSelect = util.select.fromTo(0,1,1,0,1,2);
+        scene.world.showSection(util.select.layer(0), Direction.UP);
+        scene.idle(5);
+        scene.world.showSection(condenserSelect, Direction.DOWN);
+        scene.idle(5);
+        scene.world.showSection(middleSourceSelect, Direction.DOWN);
+        scene.idle(5);
+        scene.world.setKineticSpeed(middleSourceSelect, 64);
+        scene.idle(5);
+        scene.world.showSection(rightSourceSelect, Direction.DOWN);
+        scene.world.showSection(rightMirror, Direction.DOWN);
+        scene.idle(5);
+        scene.world.setKineticSpeed(rightSourceSelect, 64);
+        scene.world.showSection(leftSourceSelect, Direction.DOWN);
+        scene.world.showSection(leftMirror, Direction.DOWN);
+        scene.idle(5);
+        scene.world.setKineticSpeed(leftSourceSelect, 64);
+        scene.effects.indicateSuccess(condenser);
+        scene.idle(10);
+        scene.overlay.showText(40)
+                .attachKeyFrame()
+                .independent(0)
+                .text("Optical Condensers can combine up to three beams simultaneously.")
+                .pointAt(util.vector.blockSurface(condenser, Direction.UP));
+        scene.idle(60);
+        String[] actions =
+                new String[] { "Speed is the sum of the beam intensity velocities,", "Beam Type and speed direction is the same of the higher beam,", "Visibility depends if there's at least one visible beam composing it,", "Polarization and color follow the composing system."};
+        scene.overlay.showText(80)
+                .attachKeyFrame()
+                .independent(20)
+                .placeNearTarget()
+                .text("The resultant beam acts exactly like a normal beam. But its initial properties follow these criteria:");
+        scene.idle(10);
+        int y = 62;
+        for (String s : actions) {
+            scene.idle(20);
+            scene.overlay.showText(50)
+                    .colored(PonderPalette.MEDIUM)
+                    .placeNearTarget()
+                    .independent(y)
+                    .text(s);
+            y += 32;
+        }
+        scene.idle(30);
+        scene.overlay.showText( 60)
+                .colored(PonderPalette.GREEN)
+                .placeNearTarget()
+                .independent(20)
+                .text("Composing system means that the components can compose a different result than itself. Different colors create a white resultant beam, same colors create a beam with the specific color. ");
+        scene.idle(40);
+        scene.overlay.showText( 40)
+                .colored(PonderPalette.BLUE)
+                .placeNearTarget()
+                .independent(92)
+                .text("The same goes to the polarization property.");
+        scene.idle(50);
+
+        scene.overlay.showText(40)
+                .attachKeyFrame()
+                .independent(30)
+                .placeNearTarget()
+                .text("To transform really fast beams into rotational force you'll need a greater receptor");
+        scene.idle(40);
+        scene.world.showSection(receptorSelect, Direction.DOWN);
+        scene.idle(10);
+        scene.world.setKineticSpeed(receptorSelect, 64);
+        scene.effects.rotationSpeedIndicator(receptor);
+        scene.idle(40);
+        scene.overlay.showText(40)
+                .independent(0)
+                .text("This is a heavy optical receptor. It works more like the light receptor but this one supports more stress.")
+                .pointAt(util.vector.blockSurface(receptor, Direction.UP));
+        scene.idle(50);
+        scene.overlay.showText(40)
+                .independent(0)
+                .text("The speed of this component goes as one third of the speed of the incident beam.")
+                .pointAt(util.vector.blockSurface(receptor, Direction.UP));
+        scene.idle(50);
+
+    }
+
+    public static void focuser(SceneBuilder scene, SceneBuildingUtil util){
+        scene.title("opticals.beam_focuser", "Beam Focuser");
+        scene.configureBasePlate(0, 0, 5);
+
+        BlockPos focuser = util.grid.at(3,3, 2);
+        BlockPos source = util.grid.at(3, 4, 4);
+        BlockPos mirror = util.grid.at(3,4, 2);
+        BlockPos beltStart = util.grid.at(4,1,2);
+        Selection base = util.select.fromTo(0,0,0, 4,0,4);
+        Selection belt = util.select.fromTo(0,1,2, 4,1,2);
+        Selection motor = util.select.fromTo(3,1,3,3,3,3);
+        Selection sourceSelect = util.select.fromTo(3,0,5,3,4,5)
+                .add(util.select.position(source))
+                .add(util.select.fromTo(3,1,4,3,3,4));
+
+        scene.world.showSection(base, Direction.UP);
+        scene.idle(5);
+        scene.world.showSection(belt, Direction.DOWN);
+        scene.idle(5);
+        scene.world.showSection(motor, Direction.DOWN);
+        scene.idle(5);
+        scene.world.showSection(util.select.position(focuser), Direction.DOWN);
+        scene.idle(5);
+        scene.world.setKineticSpeed(belt, 16);
+        scene.world.setKineticSpeed(util.select.position(focuser), 16);
+        scene.world.setKineticSpeed(motor, 16);
+        scene.world.setKineticSpeed(sourceSelect, 16);
+        scene.effects.indicateSuccess(focuser);
+        scene.idle(5);
+        scene.idle(10);
+        scene.overlay.showText(40)
+                .attachKeyFrame()
+                .independent(0)
+                .text("Optical focuser can process items with incident light and rotational power")
+                .pointAt(util.vector.blockSurface(focuser, Direction.UP));
+        scene.idle(50);
+        scene.world.showSection(util.select.position(mirror), Direction.DOWN);
+        scene.idle(5);
+        scene.world.showSection(sourceSelect, Direction.DOWN);
+        scene.overlay.showText(60)
+                .independent(0)
+                .attachKeyFrame()
+                .text("This component needs a incident beam to work properly, you'll need to control the beam type of the source to process certain items")
+                .pointAt(util.vector.blockSurface(focuser, Direction.UP));
+        scene.idle(70);
+        ElementLink<BeltItemElement> item = scene.world.createItemOnBelt(beltStart, Direction.NORTH, new ItemStack(Items.GLASS_PANE));
+        scene.idle(30);
+        scene.world.stallBeltItem(item, true);
+        scene.world.modifyBlockEntity(focuser, BeamFocuserBlockEntity.class, pte -> pte.processingTicks = 40);
+        scene.idle(35);
+        scene.world.modifyBlockEntity(focuser, BeamFocuserBlockEntity.class, pte -> pte.processingTicks = -1);
+        scene.world.removeItemsFromBelt(focuser.below(2));
+        scene.world.createItemOnBeltLike(focuser.below(2), Direction.UP, new ItemStack(COItems.MIRROR));
+        scene.idle(60);
+        scene.overlay.showText(40)
+                .independent(0)
+                .attachKeyFrame()
+                .text("Some recipes need specific items to operate with the required mode")
+                .pointAt(util.vector.blockSurface(focuser, Direction.EAST));
+        scene.world.modifyBlockEntity(focuser, BeamFocuserBlockEntity.class, pte -> pte.filtering.setFilter(Direction.WEST ,new ItemStack(Items.BLUE_DYE)));
+        scene.effects.indicateSuccess(focuser);
+        scene.idle(15);
+        item = scene.world.createItemOnBelt(beltStart, Direction.NORTH, new ItemStack(Items.WHITE_WOOL));
+        scene.idle(30);
+        scene.world.stallBeltItem(item, true);
+        scene.world.modifyBlockEntity(focuser, BeamFocuserBlockEntity.class, pte -> pte.processingTicks = 40);
+        scene.idle(35);
+        scene.world.modifyBlockEntity(focuser, BeamFocuserBlockEntity.class, pte -> pte.processingTicks = -1);
+        scene.world.removeItemsFromBelt(focuser.below(2));
+        scene.world.createItemOnBeltLike(focuser.below(2), Direction.UP, new ItemStack(Items.BLUE_WOOL));
+        scene.idle(60);
+
+    }
+
+
     public static void changeSpeed(SceneBuilder scene, Selection laser, Selection bigWheel, int speed){
         scene.world.setKineticSpeed(laser, speed);
         scene.world.setKineticSpeed(bigWheel, (int) (speed * (-0.5)));

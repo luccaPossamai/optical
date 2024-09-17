@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "minecraft:cutout_mipped",
 	"parent": "block/block",
 	"textures": {
 		"top": "create_optical:block/optical_sensor/sensor_base",

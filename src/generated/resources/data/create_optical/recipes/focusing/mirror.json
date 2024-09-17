@@ -1,0 +1,15 @@
+{
+  "type": "create_optical:focusing",
+  "ingredients": [
+    {
+      "tag": "forge:glass_panes"
+    }
+  ],
+  "processingTime": 50,
+  "required_beam_type": 2,
+  "results": [
+    {
+      "item": "create_optical:mirror"
+    }
+  ]
+}

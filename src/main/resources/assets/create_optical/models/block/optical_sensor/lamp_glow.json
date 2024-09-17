@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
+	"render_type": "minecraft:transparent",
 	"textures": {
 		"2": "create_optical:block/optical_sensor/lamp"
 	},

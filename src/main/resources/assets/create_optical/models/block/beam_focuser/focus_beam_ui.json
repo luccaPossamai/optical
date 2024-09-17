@@ -1,0 +1,20 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"render_type": "minecraft:transparent",
+	"textures": {
+		"0": "create_optical:block/beam_focuser/focus_beam_ui",
+		"particle": "create_optical:block/beam_focuser/focus_beam_ui"
+	},
+	"elements": [
+		{
+			"from": [1, -12, 8],
+			"to": [15, 8, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, 4, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 11, 16], "texture": "#0", "tintindex": 0},
+				"south": {"uv": [0, 0, 11, 16], "texture": "#0"}
+			}
+		}
+	]
+}

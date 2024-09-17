@@ -11,10 +11,10 @@ public class COShapes {
 
     public static final VoxelShape
             OPTICAL_RECEPTOR = shape(3, 0, 0, 13, 2, 16)
-            .add(3.5, 2, 1, 12.5, 13, 15)
+            .add(3.5, 3.5, 2, 12.5, 12.5, 14)
             .build();
     public static final VoxelShaper
-            OPTICAL_SOURCE = shape(0, 0, 0, 16, 12, 16)
+            OPTICAL_SOURCE = shape(0, 0, 0, 16, 11, 16)
                     .forHorizontal(Direction.NORTH),
 
             ENCASED_MIRROR = shape(0, 0, 0, 16, 2, 16)
@@ -39,7 +39,9 @@ public class COShapes {
                     .forHorizontal(Direction.NORTH),
             SENSOR = shape(5, 0, 5, 11, 3, 11)
                     .add(6, 3, 6, 10, 10, 10)
-                    .forDirectional(Direction.UP)
+                    .forDirectional(Direction.UP),
+            BEAM_CONDENSER = shape(0, 0, 0, 16, 9, 16).add(3, 9, 3, 13, 13, 13).forHorizontal(Direction.NORTH),
+            FOCUSER = shape(0, 4, 0, 16, 16, 16).forHorizontal(Direction.NORTH)
                     ;
     private static AllShapes.Builder shape(VoxelShape shape) {
         return new AllShapes.Builder(shape);

@@ -9,7 +9,7 @@
       "item": "create:cogwheel"
     },
     "L": {
-      "item": "create_optical:laser"
+      "item": "create_optical:optical_device"
     },
     "P": {
       "item": "create_optical:polarizing_filter"

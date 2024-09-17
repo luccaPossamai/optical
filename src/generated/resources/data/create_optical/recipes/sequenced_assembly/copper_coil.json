@@ -1,0 +1,69 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create:andesite_alloy"
+  },
+  "loops": 8,
+  "results": [
+    {
+      "chance": 100.0,
+      "item": "create_optical:copper_coil"
+    },
+    {
+      "chance": 10.0,
+      "item": "create:copper_sheet"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_copper_coil"
+        },
+        {
+          "item": "create:copper_sheet"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_copper_coil"
+        }
+      ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_copper_coil"
+        },
+        {
+          "amount": 250,
+          "fluid": "minecraft:lava",
+          "nbt": {}
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_copper_coil"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_copper_coil"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_copper_coil"
+        }
+      ]
+    }
+  ],
+  "transitionalItem": {
+    "item": "create_optical:incomplete_copper_coil"
+  }
+}

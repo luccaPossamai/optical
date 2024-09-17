@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
+	"render_type": "minecraft:cutout_mipped",
 	"textures": {
 		"1": "create:block/gearbox",
 		"2": "create:block/funnel/andesite_funnel_frame",

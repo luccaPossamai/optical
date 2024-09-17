@@ -26,7 +26,10 @@ public class COIcons extends AllIcons {
                 POL_HORIZONTAL = next(),
                 POL_DIAGONAL_POSITIVE = next(),
                 POL_VERTICAL = next(),
-                POL_DIAGONAL_NEGATIVE = next();
+                POL_DIAGONAL_NEGATIVE = next(),
+                RECEPTOR_LIGHT_GEAR = next(),
+                RECEPTOR_MEDIUM_GEAR = next(),
+                RECEPTOR_HEAVY_GEAR = next();
 
 
     private static COIcons next() {
