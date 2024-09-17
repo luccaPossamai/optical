@@ -67,9 +67,6 @@
       "ingredients": [
         {
           "item": "create_optical:incomplete_rose_quartz_catalyst_coil"
-        },
-        {
-          "item": "create:rose_quartz"
         }
       ],
       "processingTime": 40,
