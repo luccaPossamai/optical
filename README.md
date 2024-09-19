@@ -1,12 +1,8 @@
-
-
-
-![Base Profile 2024 06 02 - 01 34 16 02](https://github.com/luccaPossamai/optical/assets/110493821/b7ecf37e-feee-4f32-8e9e-2031a0f22a6d)
-
-
-  Create Optical Mod
+![minecraft_title](https://github.com/user-attachments/assets/fe0a6a45-953d-4515-ba1a-1217da721642)
 
 A mod based on transfer rotational force by light.
+
+![Base Profile 2024 09 18 - 21 01 25 05 (2)](https://github.com/user-attachments/assets/96e521f0-5edd-4fd9-bd06-7ff18fc8075f)
 
 This addon adds new blocks, items and mechanics to the mod create.
 Such as:
@@ -16,12 +12,19 @@ Such as:
  - Mirror: Reflect the beam perpendicularly;
  - Polarizing Filter: Polarize the beam(duh);
  - Beam Splitter Cube: Split the beam in two and polarize the resultant beams perpendicularly;
-   
+ - Beam Condenser: Condenser up to three beams into one combining its properties;
+ - Beam Focuser: new type of recipe based on beam's characteristics.
+
+![rec1](https://github.com/user-attachments/assets/07ce17f6-aa7a-467a-be37-8d406819df47)
+
 All the crafts can be found with the JEI mod, and most of the additional mechanics can be found with the ponder(Create Mod) system.
 
-![335842526-0c7c17be-6fe0-45e3-9283-e32520d17558](https://github.com/luccaPossamai/optical/assets/110493821/9ab9b22b-6f9f-4776-bd4b-43dcd015b992)
+![Base Profile 2024 06 02 - 01 34 16 02](https://github.com/luccaPossamai/optical/assets/110493821/b7ecf37e-feee-4f32-8e9e-2031a0f22a6d)
 
 
+
+Copper Legacy Texture added:
+![copper_title](https://github.com/user-attachments/assets/e956b2d0-5da2-4832-8691-be5ab2ebb4fb)
 
 
 
