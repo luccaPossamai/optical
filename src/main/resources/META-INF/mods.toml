@@ -1,12 +1,15 @@
 
 modLoader="javafml"
 loaderVersion="${loader_version_range}"
+issueTrackerURL="https://github.com/luccaPossamai/optical/issues"
 license="${mod_license}"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/create-optical"
 authors="${mod_authors}"
+logoFile="icon.png"
 
 description='''${mod_description}'''
 [[dependencies.${mod_id}]]

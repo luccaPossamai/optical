@@ -41,8 +41,6 @@ public class BeamFocuserRenderer extends ShaftRenderer<BeamFocuserBlockEntity> {
         ms.scale(1, 1.1F, 1F);
 
 
-
-
         double k = 0.08;
         double radius = 18;
         double alpha = 1.25;
@@ -51,6 +49,7 @@ public class BeamFocuserRenderer extends ShaftRenderer<BeamFocuserBlockEntity> {
             VertexConsumer vb = buffer.getBuffer(RenderType.translucentNoCrumbling());
             SuperByteBuffer focusBeam = CachedBufferer.partial(COPartialModels.FOCUS_BEAM, blockState)
                     .disableDiffuse()
+
                     .light(LightTexture.FULL_BRIGHT);
 
             VertexConsumer vb1 = buffer.getBuffer(getBeamRenderType());
@@ -58,19 +57,19 @@ public class BeamFocuserRenderer extends ShaftRenderer<BeamFocuserBlockEntity> {
                     .light(LightTexture.FULL_BRIGHT)
                     .disableDiffuse();
 
-            be.getBeamSourceInstance().optionalBeamProperties().ifPresent(beamProperties -> {
-                int color = beamProperties.dyeColor.getFireworkColor();
 
-                focusBeam.color(beamProperties.dyeColor.getFireworkColor());
-                focusBeam1.color((color >> 16) & 0xFF, (color >> 8) & 0xFF, (color & 0xFF), 10);
-            });
             Direction.Axis rotDirection = direction.getStepX() == 0 ? direction.getClockWise().getAxis() : direction.getAxis();
             float rot_off = AngleHelper.rad(90 - direction.toYRot());
             kineticRotationTransform(focusBeam, be, Direction.Axis.Y, rot_off, light);
             kineticRotationTransform(focusBeam1, be, Direction.Axis.Y, rot_off, light);
 
-            kineticRotationTransform(focusBeam, be, rotDirection, AngleHelper.rad(angle), light).renderInto(ms, vb);
-            kineticRotationTransform(focusBeam1, be, rotDirection, AngleHelper.rad(angle), light).renderInto(ms, vb1);
+            kineticRotationTransform(focusBeam, be, rotDirection, AngleHelper.rad(angle), light);//.renderInto(ms, vb);
+            kineticRotationTransform(focusBeam1, be, rotDirection, AngleHelper.rad(angle), light);//.renderInto(ms, vb1);
+            be.getBeamSourceInstance().optionalBeamProperties().ifPresent(beamProperties -> {
+                int color = beamProperties.dyeColor.getFireworkColor();
+                focusBeam.color(beamProperties.dyeColor.getFireworkColor()).light(15728880).renderInto(ms, vb);
+                focusBeam1.color((color >> 16) & 0xFF, (color >> 8) & 0xFF, (color & 0xFF), 255).light(15728880).renderInto(ms, vb1);
+            });
         }
         ms.popPose();
     }
@@ -91,11 +90,11 @@ public class BeamFocuserRenderer extends ShaftRenderer<BeamFocuserBlockEntity> {
                 VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
                         .setWriteMaskState(new RenderStateShard.WriteMaskStateShard(true, true))
                         .setDepthTestState(new RenderStateShard.DepthTestStateShard("<=", 515))
-                        .setCullState(new RenderStateShard.CullStateShard(false)) // Desative o culling para renderizar ambas as faces
+                        .setCullState(new RenderStateShard.CullStateShard(false))
                         .setTextureState(new RenderStateShard.TextureStateShard(TextureAtlas.LOCATION_BLOCKS, false, true))
                         .setTransparencyState(new RenderStateShard.TransparencyStateShard("translucent_transparency", () -> {
                             RenderSystem.enableBlend();
-                            RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
+                            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
                         }, () -> {
                             RenderSystem.disableBlend();
                             RenderSystem.defaultBlendFunc();
