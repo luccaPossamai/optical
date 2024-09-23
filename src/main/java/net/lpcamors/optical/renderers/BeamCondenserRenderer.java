@@ -10,13 +10,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 public class BeamCondenserRenderer extends SafeBlockEntityRenderer<BeamCondenserBlockEntity> {
 
 
-    public BeamCondenserRenderer(BlockEntityRendererProvider.Context context){
+    public BeamCondenserRenderer(BlockEntityRendererProvider.Context context){}
 
-    }
     @Override
     protected void renderSafe(BeamCondenserBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource bufferSource, int light, int overlay) {
         if(be.shouldRendererLaserBeam()){
-            IBeamSource.renderLaserBeam(be, partialTicks, ms, bufferSource, light);
+            IBeamSource.ClientSide.renderLaserBeam(be, partialTicks, ms, bufferSource, light);
         }
     }
 }

@@ -61,7 +61,7 @@ public class AbsorptionPolarizingFilter extends HorizontalDirectionalBlock imple
         if(direction.getAxis().isVertical() || direction.getAxis().equals(state.getValue(FACING).getAxis())) return;
         BeamHelper.BeamPolarization beamPolarization = state.getValue(POLARIZATION);
         if(beamPolarization.isDiagonal()){
-            if(!direction.equals(state.getValue(FACING).getClockWise())){
+            if(!direction.equals(state.getValue(FACING).getCounterClockWise())){
                 beamPolarization = beamPolarization.getNextRotated(2);
             }
         }
