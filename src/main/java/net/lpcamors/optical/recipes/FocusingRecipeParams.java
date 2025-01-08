@@ -1,24 +1,17 @@
 package net.lpcamors.optical.recipes;
 
-import com.google.gson.internal.NonNullElementWrapperList;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.compat.jei.CreateJEI;
-import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.blocks.optical_source.BeamHelper;
-import net.lpcamors.optical.data.FocusingRecipeGen;
-import net.minecraft.client.Minecraft;
+import net.lpcamors.optical.data.IndexedEnum;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -74,7 +67,6 @@ public class FocusingRecipeParams extends ProcessingRecipeBuilder.ProcessingReci
     }
 
     public enum BeamTypeCondition {
-
         RADIO(0, 6192150),
         MICROWAVE(1,
                 (level, itemStack) -> {
@@ -97,6 +89,8 @@ public class FocusingRecipeParams extends ProcessingRecipeBuilder.ProcessingReci
         GAMMA(3, 0x5C93E8),
         NONE(4, 0xffffff)
         ;
+
+        public static final IndexedEnum<BeamTypeCondition> INDEXED = new IndexedEnum<>(true, BeamTypeCondition.values());
 
         private final int id;
         private final BiFunction<Level, ItemStack, Boolean> bf;
