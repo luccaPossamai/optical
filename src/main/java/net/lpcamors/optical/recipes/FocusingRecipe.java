@@ -1,7 +1,6 @@
 package net.lpcamors.optical.recipes;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
@@ -9,12 +8,10 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.sequenced.IAssemblyRecipe;
 import net.lpcamors.optical.CORecipeTypes;
 import net.lpcamors.optical.blocks.COBlocks;
-import net.lpcamors.optical.blocks.beam_focuser.BeamFocuserBlock;
 import net.lpcamors.optical.blocks.beam_focuser.BeamFocuserBlockEntity;
 import net.lpcamors.optical.compat.jei.FocusingAssemblySubcategory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -132,12 +129,12 @@ public class FocusingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
         return this.beamTypeCondition;
     }
 
-    protected FocusingRecipeParams.BeamTypeCondition readRequiredBeamType(JsonObject jsonObject){
-        if(jsonObject.has(REQUIRED_BEAM_TYPE_KEY)){
-            var r = jsonObject.get(REQUIRED_BEAM_TYPE_KEY);
-            boolean f = r.isJsonPrimitive() && ((JsonPrimitive) r).isNumber();
-            if(r instanceof JsonPrimitive j && j.isNumber() && (j.getAsInt() >= 0 && j.getAsInt() < FocusingRecipeParams.BeamTypeCondition.values().length)){
-                return FocusingRecipeParams.BeamTypeCondition.values()[r.getAsInt()];
+    protected FocusingRecipeParams.BeamTypeCondition readRequiredBeamType(JsonObject jsonObject) {
+        if (jsonObject.has(REQUIRED_BEAM_TYPE_KEY)) {
+            var got = jsonObject.get(REQUIRED_BEAM_TYPE_KEY);
+            var parsed = FocusingRecipeParams.BeamTypeCondition.INDEXED.fromJson(got);
+            if (parsed != null) {
+                return parsed;
             }
         }
         return FocusingRecipeParams.BeamTypeCondition.NONE;
