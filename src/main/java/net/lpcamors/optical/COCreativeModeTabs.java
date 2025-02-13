@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.lpcamors.optical.blocks.COBlocks;
+import net.lpcamors.optical.data.COLang;
 import net.lpcamors.optical.items.COItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.*;
@@ -27,7 +28,7 @@ public class COCreativeModeTabs {
 
     public static final RegistryObject<CreativeModeTab> CO_BASE_CREATIVE_TAB = CREATIVE_MODE_TABS.register("co_base",
             () -> CreativeModeTab.builder()
-                    .title(Components.translatable("itemGroup.create_optical.co_base"))
+                    .title(COLang.Prefixes.CREATIVE_TAB.translate("co_base"))
                     .icon(COBlocks.OPTICAL_SOURCE::asStack)
                     .displayItems(DisplayItems::displayItemsGenerator)
                     .build());
@@ -40,6 +41,7 @@ public class COCreativeModeTabs {
             List<ItemProviderEntry<?>> excludedItems = List.of(
                     COItems.INCOMPLETE_COPPER_COIL,
                     COItems.INCOMPLETE_GOLDEN_COIL,
+                    COItems.INCOMPLETE_ZINC_COIL,
                     COItems.INCOMPLETE_QUARTZ_CATALYST_COIL,
                     COItems.INCOMPLETE_MIRROR,
                     COItems.INCOMPLETE_POLARIZING_FILTER,

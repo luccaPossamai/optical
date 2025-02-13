@@ -2,20 +2,21 @@ package net.lpcamors.optical.blocks.optical_source;
 
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.INamedIconOptions;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import net.lpcamors.optical.CODamageSources;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.COIcons;
-import net.lpcamors.optical.recipes.FocusingRecipeParams;
+import net.lpcamors.optical.COUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.*;
-import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,53 +39,68 @@ public class BeamHelper {
         float[] floats = dyeColor.getTextureDiffuseColors();
         return new Vec3i((int) (floats[0] * 255), (int) (floats[1] * 255), (int) (floats[2] * 255));
     }
-
+    public static Vec3i colorSum(Vec3i rgb1, Vec3i rgb2){
+        // THIS IS PURELY DECORATION(to make a real sum of colors you'll need to save the changes of colors)
+        // That's not hard to make, I just don't want that :/
+        if(rgb1.distToLowCornerSqr(250, 250, 250) <= 125) return rgb2;
+        Vec3 v = Vec3.atLowerCornerOf(rgb1).add(Vec3.atLowerCornerOf(rgb2)).multiply(0.5F,0.5F, 0.5F);
+        return new Vec3i((int)  v.x, (int) v.y, (int) v.z);
+    }
     public static class BeamProperties {
 
-        public final float speed;
+        public static float SPEED_CONSTANT = 4F;
+
         public final float intensity;
         public final BeamPolarization beamPolarization;
-        public final DyeColor dyeColor;
+        public Vec3i color;
         public final Direction direction;
+        public final Boolean spin;
         public final BeamType beamType;
+        public int changedColors = 1;
 
         public boolean forceVisibility = false;
         public boolean forcePenetration = false;
 
-        public BeamProperties(float speed, Direction direction, BeamType beamType){
-            this(speed, BeamPolarization.RANDOM, direction, beamType);
+        public static float intensityBySpeed(float speed){
+            return Math.abs(speed / SPEED_CONSTANT);
         }
-        public BeamProperties(float speed, BeamPolarization beamPolarization, Direction direction, BeamType beamType){
-            this(speed, 1, beamPolarization, DyeColor.WHITE, direction, beamType);
+        public static boolean spinBySpeed(float speed){
+            return speed > 0;
+        }
+        public static BeamProperties withDirection(BeamProperties beamProperties, Direction direction){
+            return new BeamHelper.BeamProperties(beamProperties.intensity, beamProperties.beamPolarization, beamProperties.color, direction, beamProperties.spin, beamProperties.beamType);
         }
 
-        public BeamProperties(float speed, float intensity, BeamPolarization beamPolarization, DyeColor dyeColor, Direction direction) {
-            this(speed, intensity, beamPolarization, dyeColor, direction, BeamType.getTypeBySpeed(speed));
+        public BeamProperties(float intensity, BeamPolarization beamPolarization, Direction direction, boolean spin, BeamType beamType){
+            this(intensity, beamPolarization, COUtils.getColor(DyeColor.WHITE), direction, spin, beamType);
         }
-        public BeamProperties(float speed, float intensity, BeamPolarization beamPolarization, DyeColor dyeColor, Direction direction, BeamType beamType){
-            this.speed = speed;
+
+        public BeamProperties(float intensity, BeamPolarization beamPolarization, Vec3i color, Direction direction, boolean spin, BeamType beamType){
             this.intensity = intensity;
             this.beamPolarization = beamPolarization;
-            this.dyeColor = dyeColor;
+            this.color = color;
             this.direction = direction;
+            this.spin = spin;
             this.beamType = beamType;
         }
 
 
         public static BeamProperties sum(Direction direction, List<BeamProperties> beamProperties) {
-            float speed = 0;
-            BeamPolarization beamPolarization = BeamPolarization.RANDOM;
+
+            float intensity = 0;
+            BeamPolarization beamPolarization = beamProperties.get(0).beamPolarization;
             boolean forcePol = false;
-            DyeColor color = null;
-            BeamType type = null;
+            Vec3i color = null;
+            BeamType type = beamProperties.get(0).beamType;
             boolean hasVisible = false;
-            int signal = 1;
+            boolean spin = true;
             for(BeamProperties beamProperties1 : beamProperties){
-                if(Math.abs(speed) < Math.abs(beamProperties1.speed)) {
+                if(intensity < beamProperties1.intensity) {
                     type = beamProperties1.beamType;
-                    signal = (int) (beamProperties1.speed / Math.abs(beamProperties1.speed));
+                    spin = beamProperties1.spin;
                 }
-                speed += Math.abs(beamProperties1.speed) * beamProperties1.intensity;
+
+                intensity += beamProperties1.intensity;
                 if(!forcePol && beamPolarization != beamProperties1.beamPolarization && beamProperties1.beamPolarization != BeamPolarization.RANDOM) {
                     if(beamPolarization != BeamPolarization.RANDOM){
                         beamPolarization = BeamPolarization.RANDOM;
@@ -96,26 +112,24 @@ public class BeamHelper {
                 if(beamProperties1.beamType.visible()){
                     hasVisible = true;
                     if(color == null) {
-                        color = beamProperties1.dyeColor;
-                    } else if(color != beamProperties1.dyeColor) {
-                        color = DyeColor.WHITE;
+                        color = beamProperties1.color;
+                    } else  {
+                        color = colorSum(color, beamProperties1.color);
                     }
                 }
             }
-            color = color == null ? DyeColor.WHITE : color;
-            BeamProperties beamProperties1 = new BeamProperties(signal * speed, 1F, beamPolarization, color, direction, type);
+            color = color == null ? COUtils.getColor(DyeColor.WHITE) : color;
+            BeamProperties beamProperties1 = new BeamProperties(intensity, beamPolarization, color, direction, spin, type);
             beamProperties1.forceVisibility = hasVisible;
 
             beamProperties1.forcePenetration = type.canPassThroughEntities();//type cannot be null, dumb IDE
             return beamProperties1;
         }
 
-        public float getTeoreticalIntensitySpeed(){
-            return this.speed * this.intensity;
+        public float getTheoreticalIntensitySpeed(){
+            return SPEED_CONSTANT * this.intensity * (this.spin ? 1 : -1);
         }
-        public float getSpeed(){
-            return Mth.clamp(this.getTeoreticalIntensitySpeed(), -256, 256);
-        }
+
 
         public BeamType getType(){
             return this.beamType;
@@ -133,10 +147,12 @@ public class BeamHelper {
         public boolean equals(Object obj) {
             BeamProperties beamProperties = obj instanceof BeamProperties ? (BeamProperties) obj : null;
             if(obj == null) return false;
-            boolean f = beamProperties.speed == this.speed && beamProperties.intensity == this.intensity
-                    && beamProperties.beamPolarization == this.beamPolarization && beamProperties.dyeColor == this.dyeColor
+            boolean f = beamProperties.intensity == this.intensity
+                    && beamProperties.beamPolarization == this.beamPolarization
+                    && beamProperties.color.equals(this.color)
                     && beamProperties.direction == this.direction && beamProperties.beamType == this.beamType
-                    && beamProperties.forceVisibility == this.forceVisibility && beamProperties.forcePenetration == this.forcePenetration;
+                    && beamProperties.forceVisibility == this.forceVisibility && beamProperties.forcePenetration == this.forcePenetration
+                    && beamProperties.spin == this.spin;
                     ;
             return f;
         }
@@ -146,18 +162,19 @@ public class BeamHelper {
             ListTag tagFloats = new ListTag();
             ListTag tagInts = new ListTag();
             ListTag tagBoolean = new ListTag();
-            tagFloats.add(FloatTag.valueOf(this.speed));
+            ListTag color = NBTHelper.writeVec3i(this.color);
             tagFloats.add(FloatTag.valueOf(this.intensity));
             tagInts.add(IntTag.valueOf(this.beamPolarization.id));
-            tagInts.add(IntTag.valueOf(this.dyeColor.getId()));
             tagInts.add(IntTag.valueOf(this.direction == null ? 0 : List.of(Direction.values()).indexOf(direction)));
             tagInts.add(IntTag.valueOf(this.forceVisibility ? 1 : 0));
             tagInts.add(IntTag.valueOf(this.forcePenetration ? 1 : 0));
             tagInts.add(IntTag.valueOf(this.beamType.id));
+            tagInts.add(IntTag.valueOf(this.spin ? 1 : 0));
 
             listTag.add(tagFloats);
             listTag.add(tagInts);
             listTag.add(tagBoolean);
+            listTag.add(color);
             compoundTag.put("BeamProperties", listTag);
         }
 
@@ -167,7 +184,9 @@ public class BeamHelper {
                 ListTag listTag = (ListTag) compoundTag.get("BeamProperties");
                 ListTag tagFloats = listTag.getList(0);
                 ListTag tagInts = listTag.getList(1);
-                BeamProperties beamProperties = new BeamProperties(((FloatTag) tagFloats.get(0)).getAsFloat(), ((FloatTag) tagFloats.get(1)).getAsFloat(), BeamPolarization.values()[((IntTag)tagInts.get(0)).getAsInt()], DyeColor.byId(((IntTag)tagInts.get(1)).getAsInt()), Direction.values()[tagInts.getInt(2)], BeamType.values()[((IntTag)tagInts.get(5)).getAsInt()]);
+                ListTag tagBoolean = listTag.getList(2);
+                ListTag color = listTag.getList(3);
+                BeamProperties beamProperties = new BeamProperties(((FloatTag) tagFloats.get(0)).getAsFloat(), BeamPolarization.values()[((IntTag)tagInts.get(0)).getAsInt()], NBTHelper.readVec3i(color), Direction.values()[tagInts.getInt(2)], tagInts.getInt(6) != 0, BeamType.values()[((IntTag)tagInts.get(5)).getAsInt()]);
                 beamProperties.forceVisibility = tagInts.getInt(3) == 1;
                 beamProperties.forcePenetration = tagInts.getInt(4) == 1;
                 return Optional.of(beamProperties);
@@ -253,7 +272,7 @@ public class BeamHelper {
         }
 
         public String getDescriptionId() {
-            return "create." + getTranslationKey();
+            return getTranslationKey();
         }
 
         @Override
@@ -263,7 +282,7 @@ public class BeamHelper {
 
         @Override
         public String getTranslationKey() {
-            return COMod.ID + ".polarization." + this.getSerializedName();
+            return "polarization." + this.getSerializedName();
         }
     }
 
@@ -328,7 +347,7 @@ public class BeamHelper {
         }
 
         public String getDescriptionId() {
-            return "create."+COMod.ID +".beam_type.type."+(this.name().toLowerCase(Locale.ROOT));
+            return "beam_type.type."+(this.name().toLowerCase(Locale.ROOT));
         }
 
 

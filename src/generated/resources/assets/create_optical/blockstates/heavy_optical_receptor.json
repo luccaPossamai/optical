@@ -8,12 +8,12 @@
       "model": "create_optical:block/heavy_optical_receptor/base_wall"
     },
     "axis_along_first=false,facing=north": {
-      "model": "create_optical:block/heavy_optical_receptor/base_wall",
+      "model": "create_optical:block/heavy_optical_receptor/base_vertical",
       "x": 90,
       "y": 270
     },
     "axis_along_first=false,facing=south": {
-      "model": "create_optical:block/heavy_optical_receptor/base_wall",
+      "model": "create_optical:block/heavy_optical_receptor/base_vertical",
       "x": 90,
       "y": 90
     },
@@ -30,7 +30,7 @@
       "y": 90
     },
     "axis_along_first=true,facing=east": {
-      "model": "create_optical:block/heavy_optical_receptor/base_wall",
+      "model": "create_optical:block/heavy_optical_receptor/base_vertical",
       "x": 90
     },
     "axis_along_first=true,facing=north": {
@@ -46,7 +46,7 @@
       "y": 90
     },
     "axis_along_first=true,facing=west": {
-      "model": "create_optical:block/heavy_optical_receptor/base_wall",
+      "model": "create_optical:block/heavy_optical_receptor/base_vertical",
       "x": 90,
       "y": 180
     }

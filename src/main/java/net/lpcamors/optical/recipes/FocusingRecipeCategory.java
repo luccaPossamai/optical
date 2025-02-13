@@ -10,6 +10,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.lpcamors.optical.data.COLang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -56,7 +57,7 @@ public class FocusingRecipeCategory extends CreateRecipeCategory<FocusingRecipe>
 
     @Override
     public Component getTitle() {
-        return Component.translatable("recipe.create_optical.focusing");
+        return COLang.Prefixes.JEI.translate("focusing");
     }
 
     @Override
@@ -76,7 +77,7 @@ public class FocusingRecipeCategory extends CreateRecipeCategory<FocusingRecipe>
             AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 136, -19 * (vRows - 1) + 32);
         AllGuiTextures heatBar = AllGuiTextures.JEI_NO_HEAT_BAR;
         heatBar.render(graphics, 4, 80);
-        graphics.drawString(Minecraft.getInstance().font, Lang.translateDirect(recipe.getRequiredBeamType().getTranslationKey()), 9,
+        graphics.drawString(Minecraft.getInstance().font, COLang.Prefixes.JEI.translate(recipe.getRequiredBeamType().getTranslationKey()), 9,
                 86, recipe.getRequiredBeamType().getColor(), false);
     }
 

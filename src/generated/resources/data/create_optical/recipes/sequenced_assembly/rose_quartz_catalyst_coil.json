@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "create:andesite_alloy"
   },
-  "loops": 4,
+  "loops": 3,
   "results": [
     {
       "chance": 100.0,
@@ -11,7 +11,7 @@
     },
     {
       "chance": 10.0,
-      "item": "create:rose_quartz"
+      "item": "create:polished_rose_quartz"
     }
   ],
   "sequence": [
@@ -22,7 +22,7 @@
           "item": "create_optical:incomplete_rose_quartz_catalyst_coil"
         },
         {
-          "item": "create:rose_quartz"
+          "item": "create:polished_rose_quartz"
         }
       ],
       "results": [

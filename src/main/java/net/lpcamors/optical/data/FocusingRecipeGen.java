@@ -14,6 +14,7 @@ import net.lpcamors.optical.recipes.FocusingRecipe;
 import net.lpcamors.optical.recipes.FocusingRecipeParams;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 
 import java.util.function.Supplier;
@@ -23,7 +24,12 @@ import java.util.function.UnaryOperator;
 public class FocusingRecipeGen extends ProcessingRecipeGen {
 
     GeneratedRecipe
-            MIRROR = create(() -> COMod.loc("mirror"), f -> (FocusingRecipeBuilder) f.require(Tags.Items.GLASS_PANES).output(COItems.MIRROR).duration(50), FocusingRecipeParams.BeamTypeCondition.VISIBLE);
+            MIRROR = create(() -> COMod.loc("mirror"), f -> {
+                return (FocusingRecipeBuilder) f.require(Tags.Items.GLASS_PANES).output(COItems.MIRROR).duration(50);
+            }, FocusingRecipeParams.BeamTypeCondition.VISIBLE),
+            FILTER = create(() -> COMod.loc("filter"), f -> {
+                return (FocusingRecipeBuilder) f.require(Items.TINTED_GLASS).output(COItems.POLARIZING_FILTER).duration(50);
+            }, FocusingRecipeParams.BeamTypeCondition.VISIBLE);
 
 
     public FocusingRecipeGen(PackOutput generator) {

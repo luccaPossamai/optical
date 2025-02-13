@@ -1,0 +1,97 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create:iron_sheet"
+  },
+  "loops": 1,
+  "results": [
+    {
+      "chance": 100.0,
+      "item": "create_optical:optical_device"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        },
+        {
+          "item": "minecraft:amethyst_shard"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        },
+        {
+          "item": "create:iron_sheet"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        },
+        {
+          "item": "minecraft:glass_pane"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        },
+        {
+          "item": "create:iron_sheet"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        }
+      ]
+    },
+    {
+      "type": "create_optical:focusing",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        }
+      ],
+      "processingTime": 40,
+      "required_beam_type": 3,
+      "results": [
+        {
+          "item": "create_optical:incomplete_optical_device"
+        }
+      ]
+    }
+  ],
+  "transitionalItem": {
+    "item": "create_optical:incomplete_optical_device"
+  }
+}

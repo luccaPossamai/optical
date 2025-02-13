@@ -1,12 +1,14 @@
 {
   "values": [
     "create_optical:optical_source",
+    "create_optical:thermal_optical_source",
     "create_optical:optical_receptor",
     "create_optical:heavy_optical_receptor",
     "create_optical:encased_mirror",
     "create_optical:absorption_polarizing_filter",
     "create_optical:polarizing_beam_splitter_block",
     "create_optical:beam_condenser",
-    "create_optical:beam_focuser"
+    "create_optical:beam_focuser",
+    "create_optical:hologram_source"
   ]
 }

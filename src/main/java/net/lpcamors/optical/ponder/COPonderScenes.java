@@ -1,21 +1,38 @@
 package net.lpcamors.optical.ponder;
 
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
+import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.press.PressingBehaviour;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.ponder.*;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pointing;
 import net.lpcamors.optical.blocks.beam_focuser.BeamFocuserBlockEntity;
+import net.lpcamors.optical.blocks.hologram_source.HologramSourceBlock;
+import net.lpcamors.optical.blocks.hologram_source.HologramSourceBlockEntity;
+import net.lpcamors.optical.blocks.optical_receptor.OpticalReceptorBlockEntity;
 import net.lpcamors.optical.blocks.optical_sensor.OpticalSensorBlock;
+import net.lpcamors.optical.blocks.thermal_optical_source.ThermalOpticalSourceBlock;
+import net.lpcamors.optical.blocks.thermal_optical_source.ThermalOpticalSourceBlockEntity;
 import net.lpcamors.optical.items.COItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.SwimNodeEvaluator;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import oshi.jna.platform.mac.SystemConfiguration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class COPonderScenes {
 
@@ -44,6 +61,9 @@ public class COPonderScenes {
                 .text("Optical sources transform rotational force into light")
                 .pointAt(util.vector.blockSurface(util.grid.at(4, 1, 2), Direction.UP));
         scene.idle(60);
+
+
+        addAllSensorToReceptor(scene, util, receptor);
 
         scene.world.showSection(util.select.fromTo(0, 1, 2, 2, 1, 3), Direction.DOWN);
         scene.idle(10);
@@ -132,14 +152,21 @@ public class COPonderScenes {
         scene.configureBasePlate(0, 0, 5);
         BlockPos mirror = util.grid.at(1, 1, 2);
         BlockPos source = util.grid.at(4,1, 2);
-        BlockPos upReceptor = util.grid.at(0,1, 4);
-        BlockPos downReceptor = util.grid.at(0,1, 0);
+        BlockPos upReceptor = util.grid.at(1,1, 4);
+        BlockPos lowerReceptor = util.grid.at(1,1, 0);
         Selection sourceSystemSelect = util.select.fromTo(4, 1, 2, 5, 1, 2);
         Selection rotationSection = util.select.fromTo(1, 1, 2, 1, 2, 2);
         Selection bigWheelSelect = util.select.position(5, 0, 1);
         Selection upReceptorSelect = util.select.fromTo(0, 1, 4, 1, 1, 4);
         Selection downReceptorSelect = util.select.fromTo(0, 1, 0, 1, 1, 0);
+
+
+
         scene.idle(5);
+
+        addAllSensorToReceptor(scene, util, upReceptor);
+        addAllSensorToReceptor(scene, util, lowerReceptor);
+
         scene.world.showSection(util.select.layer(0), Direction.UP);
         scene.idle(5);
         scene.world.showSection(sourceSystemSelect, Direction.DOWN);
@@ -155,9 +182,10 @@ public class COPonderScenes {
         changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 64);
         scene.effects.indicateSuccess(source);
 
+
         scene.idle(20);
         scene.world.setKineticSpeed(downReceptorSelect, 64);
-        scene.effects.indicateSuccess(downReceptor);
+        scene.effects.indicateSuccess(lowerReceptor);
         scene.idle(20);
         scene.overlay.showText(40)
                 .text("Encased mirrors can propagate the incident beam perpendicularly.")
@@ -183,6 +211,88 @@ public class COPonderScenes {
 
     }
 
+    public static void receptors(SceneBuilder scene, SceneBuildingUtil util){
+        scene.title("opticals.receptors", "Receptor types: Theory into practice");
+        scene.configureBasePlate(0, 0, 5);
+
+        BlockPos source = util.grid.at(4,1, 2);
+        BlockPos source2 = util.grid.at(2,1, 4);
+        BlockPos lightReceptor = util.grid.at(2,1,2);
+        BlockPos heavyReceptor = util.grid.at(0,1,0);
+        Selection sourceSystemSelect = util.select.fromTo(4, 1, 2, 5, 1, 2)
+                                        .add(util.select.fromTo(2,1,4,2,1,5));
+        Selection bigWheelSelect = util.select.position(5, 0, 1).add(util.select.position(3,0,5));
+
+        Selection firstSection = util.select.position(lightReceptor);
+        Selection secondSection = util.select.position(2,1,0).add(util.select.position(0, 1, 2)).add(util.select.position(heavyReceptor));
+
+        Vec3 blockSurface = util.vector.blockSurface(lightReceptor, Direction.WEST)
+                .add(-0, 0, 0);
+
+        scene.idle(5);
+
+        addAllSensorToReceptor(scene, util, lightReceptor);
+        addAllSensorToReceptor(scene, util, heavyReceptor);
+
+        scene.world.showSection(util.select.layer(0), Direction.UP);
+        scene.idle(5);
+        scene.world.showSection(sourceSystemSelect, Direction.DOWN);
+        scene.idle(5);
+        scene.world.showSection(util.select.position(lightReceptor), Direction.DOWN);
+        scene.idle(20);
+
+        scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.LEFT).rightClick().withItem(COItems.OPTICAL_DEVICE.asStack()), 60);
+        scene.idle(10);
+        scene.overlay.showText(60)
+                .text("Right clicking with Optical Devices on a face of receptor adds a sensor to that direction.")
+                .attachKeyFrame()
+                .pointAt(util.vector.blockSurface(lightReceptor, Direction.UP));
+        scene.idle(70);
+
+        changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 0);
+        scene.idle(10);
+        changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 129);
+        scene.effects.indicateSuccess(source);
+        scene.effects.indicateSuccess(source2);
+
+        scene.idle(20);
+        scene.world.setKineticSpeed(secondSection, 64);
+        scene.effects.indicateSuccess(lightReceptor);
+        scene.idle(20);
+        scene.overlay.showText(40)
+                .text("Faces with sensor can receive beams. ")
+                .pointAt(util.vector.blockSurface(lightReceptor, Direction.UP));
+        scene.idle(50);
+
+
+
+        scene.overlay.showText(60)
+                .text("This is a light receptor. Adding more beams makes the speed of the receptor increase.")
+                .attachKeyFrame()
+                .pointAt(util.vector.blockSurface(lightReceptor, Direction.UP));
+        scene.idle(70);
+
+        scene.world.hideSection(util.select.position(lightReceptor), Direction.UP);
+        scene.idle(20);
+        scene.world.showSection(secondSection, Direction.DOWN);
+        scene.idle(20);
+        scene.world.setKineticSpeed(util.select.position(heavyReceptor), 64);
+        scene.effects.indicateSuccess(heavyReceptor);
+        scene.idle(20);
+
+        scene.overlay.showText(60)
+                .text("This is a heavy receptor. Adding more beams makes the stress capacity of the receptor increase.")
+                .attachKeyFrame()
+                .pointAt(util.vector.blockSurface(heavyReceptor, Direction.UP));
+        scene.idle(70);
+
+        scene.overlay.showText(60)
+                .text("With this receptor you can create stress sources very distant from the contraption.");
+        scene.idle(70);
+
+    }
+
+
     public static void polarizingFilter(SceneBuilder scene, SceneBuildingUtil util){
         scene.title("opticals.polarizing_filter", "Polarizing Filter");
         scene.configureBasePlate(0, 0, 5);
@@ -197,6 +307,8 @@ public class COPonderScenes {
         Selection filterSelection0 = util.select.position(filterPos0);
         BlockPos filterPos1 = util.grid.at(3, 1, 2);
         Selection filterSelection1 = util.select.position(filterPos1);
+        addAllSensorToReceptor(scene, util, receptor);
+
         scene.idle(5);
         scene.world.showSection(util.select.layer(0), Direction.UP);
         scene.idle(5);
@@ -407,6 +519,7 @@ public class COPonderScenes {
         Selection rightMirror = util.select.fromTo(2,1,0,3,1,1);
         BlockPos condenser = util.grid.at(2,1,2);
         BlockPos receptor = util.grid.at(0, 1, 2);
+        addAllSensorToReceptor(scene, util, receptor);
         Selection condenserSelect = util.select.position(condenser);
         Selection receptorSelect = util.select.fromTo(0,1,1,0,1,2);
         scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -434,7 +547,7 @@ public class COPonderScenes {
                 .pointAt(util.vector.blockSurface(condenser, Direction.UP));
         scene.idle(60);
         String[] actions =
-                new String[] { "Speed is the sum of the beam intensity velocities,", "Beam Type and speed direction is the same of the higher beam,", "Visibility depends if there's at least one visible beam composing it,", "Polarization and color follow the composing system."};
+                new String[] { "Intensity is the sum of the beams intensities,", "Beam Type and speed direction is the same of the higher beam,", "Visibility depends if there's at least one visible beam composing it,", "Polarization follow the composing system."};
         scene.overlay.showText(80)
                 .attachKeyFrame()
                 .independent(20)
@@ -444,25 +557,26 @@ public class COPonderScenes {
         int y = 62;
         for (String s : actions) {
             scene.idle(20);
-            scene.overlay.showText(50)
+            scene.overlay.showText(60)
                     .colored(PonderPalette.MEDIUM)
                     .placeNearTarget()
                     .independent(y)
                     .text(s);
             y += 32;
         }
-        scene.idle(30);
-        scene.overlay.showText( 60)
+        scene.idle(40);
+        scene.overlay.showText( 80)
+                .attachKeyFrame()
                 .colored(PonderPalette.GREEN)
                 .placeNearTarget()
                 .independent(20)
-                .text("Composing system means that the components can compose a different result than itself. Different colors create a white resultant beam, same colors create a beam with the specific color. ");
-        scene.idle(40);
+                .text("Composing system means that the components can compose a different result than itself. Combining different polarizations create a beam with random polarization. ");
+        scene.idle(70);
         scene.overlay.showText( 40)
                 .colored(PonderPalette.BLUE)
                 .placeNearTarget()
                 .independent(92)
-                .text("The same goes to the polarization property.");
+                .text("The color of the beam is the sum of the color of the visible beams.");
         scene.idle(50);
 
         scene.overlay.showText(40)
@@ -473,17 +587,17 @@ public class COPonderScenes {
         scene.idle(40);
         scene.world.showSection(receptorSelect, Direction.DOWN);
         scene.idle(10);
-        scene.world.setKineticSpeed(receptorSelect, 64);
+        scene.world.setKineticSpeed(receptorSelect, 32);
         scene.effects.rotationSpeedIndicator(receptor);
         scene.idle(40);
         scene.overlay.showText(40)
                 .independent(0)
-                .text("This is a heavy optical receptor. It works more like the light receptor but this one supports more stress.")
+                .text("This is a heavy optical receptor. It works more like the light receptor but this one supports greater intensities.")
                 .pointAt(util.vector.blockSurface(receptor, Direction.UP));
         scene.idle(50);
         scene.overlay.showText(40)
                 .independent(0)
-                .text("The speed of this component goes as one third of the speed of the incident beam.")
+                .text("It have fixed speed.")
                 .pointAt(util.vector.blockSurface(receptor, Direction.UP));
         scene.idle(50);
 
@@ -563,11 +677,255 @@ public class COPonderScenes {
 
     }
 
+    public static void hologram(SceneBuilder scene, SceneBuildingUtil util) {
+        scene.title("opticals.hologram_source", "Cool displays");
+        scene.configureBasePlate(0, 0, 5);
 
-    public static void changeSpeed(SceneBuilder scene, Selection laser, Selection bigWheel, int speed){
+        BlockPos source = util.grid.at(4, 1, 2);
+        BlockPos hologramSource1 = util.grid.at(3,1,2);
+        BlockPos hologramSource2 = util.grid.at(1,1,2);
+        BlockPos glass = util.grid.at(2,1,2);
+        Selection holograms = util.select.fromTo(0,1,2,3,1,2);
+        Selection sourceSystemSelect = util.select.fromTo(4, 1, 2, 5, 1, 2)
+                .add(util.select.fromTo(2, 1, 4, 2, 1, 5));
+        Selection bigWheelSelect = util.select.position(5, 0, 1).add(util.select.position(3, 0, 5));
+
+        scene.world.showSection(util.select.layer(0), Direction.UP);
+        scene.idle(5);
+        scene.world.showSection(sourceSystemSelect, Direction.DOWN);
+        scene.idle(5);
+        scene.world.showSection(holograms, Direction.DOWN);
+        scene.idle(20);
+
+
+        changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 0);
+        scene.idle(10);
+        changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 64);
+        scene.effects.indicateSuccess(source);
+        scene.idle(20);
+
+        scene.overlay.showText(40)
+                .attachKeyFrame()
+                .text("These hologram sources require visible light to work properly")
+                .pointAt(util.vector.blockSurface(source, Direction.UP));
+
+        Vec3 blockSurface1 = util.vector.blockSurface(hologramSource1, Direction.DOWN)
+                .add(0, 0, 0);
+        Vec3 blockSurface2 = util.vector.blockSurface(hologramSource2, Direction.DOWN)
+                .add(0, 0, 0);
+        scene.idle(50);
+        scene.overlay.showControls(new InputWindowElement(blockSurface1, Pointing.UP).rightClick().withItem(new ItemStack(Items.NETHERITE_AXE)), 30);
+        scene.idle(10);
+        scene.overlay.showControls(new InputWindowElement(blockSurface2, Pointing.UP).rightClick().withItem(new ItemStack(Items.GRASS_BLOCK)), 30);
+        scene.idle(10);
+
+        scene.world.modifyBlockEntityNBT(util.select.position(hologramSource1), HologramSourceBlockEntity.class, nbt -> {
+            HologramSourceBlockEntity.HologramSourceProfile profile = new HologramSourceBlockEntity.HologramSourceProfile(hologramSource1);
+            profile.stack = new ItemStack(Items.NETHERITE_AXE);
+            profile.displayMode = HologramSourceBlockEntity.Mode.SPECIFIC_ANGLE;
+            profile.fixedAngle = 0;
+            profile.write(nbt);
+        });
+        scene.idle(10);
+
+        scene.world.modifyBlockEntityNBT(util.select.position(hologramSource2), HologramSourceBlockEntity.class, nbt -> {
+            HologramSourceBlockEntity.HologramSourceProfile profile = new HologramSourceBlockEntity.HologramSourceProfile(hologramSource2);
+            profile.stack = new ItemStack(Items.GRASS_BLOCK);
+            profile.displayMode = HologramSourceBlockEntity.Mode.SPECIFIC_ANGLE;
+            profile.fixedAngle = 0;
+            profile.write(nbt);
+        });
+
+        scene.idle(10);
+
+        scene.overlay.showText(60)
+                .text("Right clicking with an item displays it as a hologram")
+                .pointAt(util.vector.blockSurface(hologramSource2, Direction.DOWN));
+        scene.idle(70);
+        scene.idle(10);
+
+        scene.overlay.showText(60)
+                .text("You can color the hologram by coloring the incident beam.")
+                .attachKeyFrame()
+                .pointAt(util.vector.blockSurface(glass, Direction.UP));
+        scene.idle(80);
+        scene.overlay.showControls(new InputWindowElement(blockSurface1, Pointing.UP).rightClick(), 30);
+        scene.idle(10);
+        scene.overlay.showControls(new InputWindowElement(blockSurface2, Pointing.UP).rightClick(), 30);
+        scene.idle(10);
+        scene.overlay.showText(80)
+                .attachKeyFrame()
+                .text("You can access the panel by right clicking it with no items in hand. There you can control the rotation of the hologram.")
+                .pointAt(util.vector.blockSurface(hologramSource2, Direction.UP));
+        scene.world.modifyBlockEntityNBT(util.select.position(hologramSource1), HologramSourceBlockEntity.class, nbt -> {
+            HologramSourceBlockEntity.HologramSourceProfile profile = new HologramSourceBlockEntity.HologramSourceProfile(hologramSource1);
+            profile.stack = new ItemStack(Items.NETHERITE_AXE);
+            profile.displayMode = HologramSourceBlockEntity.Mode.SPECIFIC_ANGLE;
+            profile.fixedAngle = 45;
+            profile.write(nbt);
+        });
+        scene.idle(10);
+
+        scene.world.modifyBlockEntityNBT(util.select.position(hologramSource2), HologramSourceBlockEntity.class, nbt -> {
+            HologramSourceBlockEntity.HologramSourceProfile profile = new HologramSourceBlockEntity.HologramSourceProfile(hologramSource2);
+            profile.stack = new ItemStack(Items.GRASS_BLOCK);
+            profile.displayMode = HologramSourceBlockEntity.Mode.SPECIFIC_ANGLE;
+            profile.fixedAngle = 45;
+            profile.write(nbt);
+        });
+
+
+
+        scene.idle(90);
+
+
+        scene.overlay.showText(40)
+                .attachKeyFrame()
+                .text("Hologram sources can be combined in a connection to make the hologram bigger!")
+                .colored(PonderPalette.BLUE);
+        scene.idle(50);
+
+
+
+
+        scene.idle(10);
+
+
+    }
+
+    public static void thermalSource(SceneBuilder scene, SceneBuildingUtil util) {
+        scene.title("opticals.thermal_source", "Light Evolution");
+        scene.configureBasePlate(0, 0, 5);
+        BlockPos source = util.grid.at(4,1, 2);
+        Selection sourceSystemSelect = util.select.fromTo(4, 1, 2, 5, 1, 2);
+        Selection tubes = util.select.fromTo(4,1,3,5,1,3);
+        Selection bigWheelSelect = util.select.position(5, 0, 1);
+        BlockPos receptor = util.grid.at(1, 1, 2);
+        BlockPos gaugePos = util.grid.at(1,1,3);
+        Selection receptorSystemSelect = util.select.fromTo(1, 1, 2,1, 1, 3);
+
+
+        scene.idle(5);
+        scene.world.showSection(util.select.layer(0), Direction.UP);
+        scene.idle(5);
+        scene.world.showSection(util.select.fromTo(4, 1, 2, 5, 1, 2), Direction.DOWN);
+        scene.idle(10);
+        scene.world.showSection(tubes, Direction.DOWN);
+
+        addAllSensorToReceptor(scene, util, receptor);
+        scene.idle(10);
+        scene.world.showSection(receptorSystemSelect, Direction.DOWN);
+        scene.idle(10);
+        changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 0);
+        scene.world.setKineticSpeed(receptorSystemSelect, 0);
+        scene.idle(10);
+        changeSpeed(scene, sourceSystemSelect, bigWheelSelect, 64);
+
+        scene.idle(20);
+        scene.overlay.showText(40)
+                .text("Thermal Optical sources require a fluid to emmit a beam")
+                .pointAt(util.vector.blockSurface(source, Direction.UP));
+        scene.idle(60);
+
+        scene.world.setKineticSpeed(tubes, -64);
+
+        Vec3 blockSurface = util.vector.blockSurface(BlockPos.containing(tubes.getCenter()), Direction.DOWN)
+                .add(0, 1, 0);
+
+
+        scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).withItem(new ItemStack(Items.WATER_BUCKET)), 30);
+        scene.idle(10);
+        FluidStack content = new FluidStack(Fluids.WATER
+                .getSource(), 1000);
+        scene.world.modifyBlockEntity(source, ThermalOpticalSourceBlockEntity.class, be ->
+                be.internalTank.getPrimaryHandler().fill(content, IFluidHandler.FluidAction.EXECUTE));
+        scene.idle(10);
+        scene.effects.indicateSuccess(source);
+        scene.idle(10);
+
+        scene.world.setKineticSpeed(receptorSystemSelect, 32);
+
+        scene.world.modifyBlockEntityNBT(util.select.position(gaugePos), StressGaugeBlockEntity.class,
+                nbt -> nbt.putFloat("Value", .5f));
+        scene.effects.indicateRedstone(gaugePos);
+
+        scene.idle(10);
+        scene.overlay.showText(40)
+                .text("Once filled with some fluid these sources begin to emmit light.")
+                .placeNearTarget()
+                .attachKeyFrame()
+                .pointAt(util.vector.blockSurface(source, Direction.UP));
+        scene.idle(60);
+        scene.idle(10);
+        scene.overlay.showText(40)
+                .text("Unlike normal sources, these have double kinetic stress impact")
+                .placeNearTarget()
+                .independent(10)
+                .colored(PonderPalette.BLUE);
+        scene.idle(30);
+        scene.overlay.showText(40)
+                .text("This means double intensity!")
+                .placeNearTarget()
+                .pointAt(util.vector.blockSurface(gaugePos, Direction.UP))
+                .colored(PonderPalette.RED);
+        scene.idle(60);
+
+        scene.world.modifyBlockEntity(source, ThermalOpticalSourceBlockEntity.class, be ->
+                be.internalTank.getPrimaryHandler().drain(1000, IFluidHandler.FluidAction.EXECUTE));
+        scene.idle(20);
+
+        scene.world.setKineticSpeed(receptorSystemSelect, 0);
+        scene.world.modifyBlockEntityNBT(util.select.position(gaugePos), StressGaugeBlockEntity.class,
+                nbt -> nbt.putFloat("Value", 0f));
+
+        scene.idle(20);
+
+        scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).withItem(new ItemStack(Items.LAVA_BUCKET)), 30);
+        scene.idle(10);
+        FluidStack content1 = new FluidStack(Fluids.LAVA
+                .getSource(), 1000);
+        scene.world.modifyBlockEntity(source, ThermalOpticalSourceBlockEntity.class, be ->
+                be.internalTank.getPrimaryHandler().fill(content1, IFluidHandler.FluidAction.EXECUTE));
+        scene.idle(10);
+        scene.effects.indicateSuccess(source);
+        scene.idle(10);
+
+        scene.world.setKineticSpeed(receptorSystemSelect, 32);
+        scene.world.modifyBlockEntityNBT(util.select.position(gaugePos), StressGaugeBlockEntity.class,
+                nbt -> nbt.putFloat("Value", .9f));
+        scene.effects.indicateRedstone(gaugePos);
+
+        scene.idle(10);
+
+        scene.overlay.showText(40)
+                .text("Lava grants double intensity comparing to water.")
+                .placeNearTarget()
+                .attachKeyFrame()
+                .pointAt(util.vector.blockSurface(gaugePos, Direction.UP));
+        scene.idle(60);
+        scene.overlay.showText(60)
+                .text("If you want to transport big stress capacity, there is the way you can do it.")
+                .colored(PonderPalette.BLUE)
+                .independent();
+        scene.idle(70);
+        scene.idle( 10);
+
+    }
+
+
+
+        public static void changeSpeed(SceneBuilder scene, Selection laser, Selection bigWheel, int speed){
         scene.world.setKineticSpeed(laser, speed);
         scene.world.setKineticSpeed(bigWheel, (int) (speed * (-0.5)));
     }
 
+    public static void addAllSensorToReceptor(SceneBuilder scene, SceneBuildingUtil util, BlockPos receptorPos){
+        List<ItemStack> sensors = new ArrayList<>(List.of(new ItemStack[]{COItems.OPTICAL_DEVICE.asStack(), COItems.OPTICAL_DEVICE.asStack(), COItems.OPTICAL_DEVICE.asStack(), COItems.OPTICAL_DEVICE.asStack()}));
+
+        scene.world.modifyBlockEntityNBT(util.select.position(receptorPos), OpticalReceptorBlockEntity.class, nbt -> {
+            nbt.put("SensorItems",
+                    NBTHelper.writeItemList(sensors));
+        });
+    }
 
 }

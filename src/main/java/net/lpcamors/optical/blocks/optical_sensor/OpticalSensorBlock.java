@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -134,14 +135,17 @@ public class OpticalSensorBlock extends DirectionalBlock implements IWrenchable,
         return getBlockEntityOptional(blockGetter, pos).map(OpticalSensorBlockEntity::getSignal)
                 .orElse(0);
     }
-
+    @Override
+    public boolean useCenteredIncidence() {
+        return true;
+    }
 
 
     public enum Mode implements StringRepresentable {
 
         INTENSITY(0, new Vec3i(67, 144, 141), optionalBeamProperties -> optionalBeamProperties.map(beamProperties -> (int)(beamProperties.intensity * 16) - 1).orElse(0)),
-        COLOR(1,  new Vec3i(136, 162, 255),optionalBeamProperties -> optionalBeamProperties.map(beamProperties -> 15 - beamProperties.dyeColor.getId()).orElse(0)),
-        DIGITAL(2, optionalBeamProperties -> optionalBeamProperties.map(beamProperties -> COUtils.getVec3iFromArray(IntStream.range(0, 3).mapToDouble(i -> beamProperties.dyeColor.getTextureDiffuseColors()[i]).mapToObj(value -> (int) (value * 255)).toList())).orElse(Vec3i.ZERO), optionalBeamProperties -> optionalBeamProperties.isPresent() ? 1 : 0)
+        COLOR(1,  new Vec3i(136, 162, 255),optionalBeamProperties -> optionalBeamProperties.map(beamProperties -> 15 - (int)(COUtils.getPseudoLengthVec(Vec3.atLowerCornerOf(beamProperties.color)) * (5F / (3 * 255)))).orElse(0)),
+        DIGITAL(2, optionalBeamProperties -> optionalBeamProperties.map(beamProperties -> beamProperties.color).orElse(Vec3i.ZERO), optionalBeamProperties -> optionalBeamProperties.isPresent() ? 1 : 0)
         ;
         private final int id;
         private final Function<Optional<BeamHelper.BeamProperties>, Vec3i> color;
@@ -169,7 +173,7 @@ public class OpticalSensorBlock extends DirectionalBlock implements IWrenchable,
 
 
         public String getDescriptionId(){
-            return "create." + COMod.ID + ".gui.goggles.optical_sensor.mode." + this.getSerializedName();
+            return "gui.goggles.optical_sensor.mode." + this.getSerializedName();
         }
 
         @Override

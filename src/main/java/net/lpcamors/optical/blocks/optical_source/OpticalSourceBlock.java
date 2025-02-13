@@ -1,20 +1,24 @@
 package net.lpcamors.optical.blocks.optical_source;
 
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
+import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.utility.Iterate;
 import net.lpcamors.optical.blocks.COBlockEntities;
 import net.lpcamors.optical.COShapes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class OpticalSourceBlock extends HorizontalKineticBlock implements IBE<OpticalSourceBlockEntityVar> {
+import java.util.Arrays;
+
+public class OpticalSourceBlock extends HorizontalKineticBlock implements IBE<OpticalSourceBlockEntity> {
 
 
     public OpticalSourceBlock(Properties properties) {
@@ -36,17 +40,43 @@ public class OpticalSourceBlock extends HorizontalKineticBlock implements IBE<Op
     }
 
 
-    public boolean canSurvive(BlockState p_153479_, LevelReader p_153480_, BlockPos p_153481_) {
-        return Block.canSupportCenter(p_153480_, p_153481_.relative(Direction.DOWN), Direction.DOWN);
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction preferredFacing = getPreferredFacing(context);
+        if (preferredFacing == null)
+            preferredFacing = (Direction) Arrays.stream(context.getNearestLookingDirections()).filter(direction -> direction.getAxis().isHorizontal()).toArray()[0];
+        return defaultBlockState().setValue(HORIZONTAL_FACING, context.getPlayer() != null && context.getPlayer()
+                .isShiftKeyDown() ? preferredFacing : preferredFacing.getOpposite());
+    }
+
+    public Direction getPreferredFacing(BlockPlaceContext context) {
+        Direction prefferedSide = null;
+        for (Direction side : Iterate.directions) {
+            BlockState blockState = context.getLevel()
+                    .getBlockState(context.getClickedPos()
+                            .relative(side));
+            if (blockState.getBlock() instanceof IRotate) {
+                if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getLevel(), context.getClickedPos()
+                        .relative(side), blockState, side.getOpposite()))
+                    if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
+                        prefferedSide = null;
+                        break;
+                    } else {
+                        prefferedSide = side;
+                    }
+            }
+        }
+        return prefferedSide != null && prefferedSide.getAxis().isVertical() ? null : prefferedSide;
+    }
+
+
+    @Override
+    public Class<OpticalSourceBlockEntity> getBlockEntityClass() {
+        return OpticalSourceBlockEntity.class;
     }
 
     @Override
-    public Class<OpticalSourceBlockEntityVar> getBlockEntityClass() {
-        return OpticalSourceBlockEntityVar.class;
-    }
-
-    @Override
-    public BlockEntityType<? extends OpticalSourceBlockEntityVar> getBlockEntityType() {
+    public BlockEntityType<? extends OpticalSourceBlockEntity> getBlockEntityType() {
         return COBlockEntities.OPTICAL_SOURCE.get();
     }
 

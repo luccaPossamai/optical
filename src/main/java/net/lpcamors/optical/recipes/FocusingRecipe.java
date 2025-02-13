@@ -10,6 +10,7 @@ import net.lpcamors.optical.CORecipeTypes;
 import net.lpcamors.optical.blocks.COBlocks;
 import net.lpcamors.optical.blocks.beam_focuser.BeamFocuserBlockEntity;
 import net.lpcamors.optical.compat.jei.FocusingAssemblySubcategory;
+import net.lpcamors.optical.data.COLang;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -70,7 +71,7 @@ public class FocusingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
 
     @Override
     public Component getDescriptionForAssembly() {
-        return Component.translatable("recipe.create_optical.focusing.sequence");
+        return COLang.Prefixes.JEI.translate("focusing.sequence."+this.beamTypeCondition.getId());
     }
 
     @Override

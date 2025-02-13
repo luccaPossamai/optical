@@ -1,0 +1,69 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create:andesite_alloy"
+  },
+  "loops": 4,
+  "results": [
+    {
+      "chance": 100.0,
+      "item": "create_optical:zinc_coil"
+    },
+    {
+      "chance": 10.0,
+      "item": "create:zinc_ingot"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_zinc_coil"
+        },
+        {
+          "item": "create:zinc_ingot"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_zinc_coil"
+        }
+      ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_zinc_coil"
+        },
+        {
+          "amount": 250,
+          "fluid": "minecraft:lava",
+          "nbt": {}
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_zinc_coil"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create_optical:incomplete_zinc_coil"
+        }
+      ],
+      "results": [
+        {
+          "item": "create_optical:incomplete_zinc_coil"
+        }
+      ]
+    }
+  ],
+  "transitionalItem": {
+    "item": "create_optical:incomplete_zinc_coil"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=east,negative_connection=false,positive_connection=false": {
+      "model": "create_optical:block/hologram_source/block_not_connected",
+      "y": 90
+    },
+    "facing=east,negative_connection=false,positive_connection=true": {
+      "model": "create_optical:block/hologram_source/block_connected_positive",
+      "y": 90
+    },
+    "facing=east,negative_connection=true,positive_connection=false": {
+      "model": "create_optical:block/hologram_source/block_connected_negative",
+      "y": 90
+    },
+    "facing=east,negative_connection=true,positive_connection=true": {
+      "model": "create_optical:block/hologram_source/block_connected",
+      "y": 90
+    },
+    "facing=north,negative_connection=false,positive_connection=false": {
+      "model": "create_optical:block/hologram_source/block_not_connected"
+    },
+    "facing=north,negative_connection=false,positive_connection=true": {
+      "model": "create_optical:block/hologram_source/block_connected_positive"
+    },
+    "facing=north,negative_connection=true,positive_connection=false": {
+      "model": "create_optical:block/hologram_source/block_connected_negative"
+    },
+    "facing=north,negative_connection=true,positive_connection=true": {
+      "model": "create_optical:block/hologram_source/block_connected"
+    },
+    "facing=south,negative_connection=false,positive_connection=false": {
+      "model": "create_optical:block/hologram_source/block_not_connected",
+      "y": 180
+    },
+    "facing=south,negative_connection=false,positive_connection=true": {
+      "model": "create_optical:block/hologram_source/block_connected_positive",
+      "y": 180
+    },
+    "facing=south,negative_connection=true,positive_connection=false": {
+      "model": "create_optical:block/hologram_source/block_connected_negative",
+      "y": 180
+    },
+    "facing=south,negative_connection=true,positive_connection=true": {
+      "model": "create_optical:block/hologram_source/block_connected",
+      "y": 180
+    },
+    "facing=west,negative_connection=false,positive_connection=false": {
+      "model": "create_optical:block/hologram_source/block_not_connected",
+      "y": 270
+    },
+    "facing=west,negative_connection=false,positive_connection=true": {
+      "model": "create_optical:block/hologram_source/block_connected_positive",
+      "y": 270
+    },
+    "facing=west,negative_connection=true,positive_connection=false": {
+      "model": "create_optical:block/hologram_source/block_connected_negative",
+      "y": 270
+    },
+    "facing=west,negative_connection=true,positive_connection=true": {
+      "model": "create_optical:block/hologram_source/block_connected",
+      "y": 270
+    }
+  }
+}

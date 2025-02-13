@@ -15,7 +15,12 @@ public class BeamCondenserRenderer extends SafeBlockEntityRenderer<BeamCondenser
     @Override
     protected void renderSafe(BeamCondenserBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource bufferSource, int light, int overlay) {
         if(be.shouldRendererLaserBeam()){
-            IBeamSource.ClientSide.renderLaserBeam(be, partialTicks, ms, bufferSource, light);
+            IBeamSource.ClientSide.renderLaserBeam(be, be.getBlockState(), ms, bufferSource);
         }
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 256;
     }
 }

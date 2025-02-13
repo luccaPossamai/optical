@@ -57,6 +57,10 @@ public class EncasedMirrorBlock extends DirectionalKineticBlock implements IBE<E
 
         return super.rotate(state, rot);
     }
+    @Override
+    public boolean useCenteredIncidence() {
+        return true;
+    }
 
     @Override
     public void receive(IBeamSource iBeamSource, BlockState state, BlockPos lastPos, BeamHelper.BeamProperties beamProperties, int lastIndex) {
@@ -64,7 +68,7 @@ public class EncasedMirrorBlock extends DirectionalKineticBlock implements IBE<E
         EncasedMirrorBlockEntity mirrorBlockEntity = this.getBlockEntity(iBeamSource.getLevel(), lastPos);
         if(mirrorBlockEntity == null) return;
         @Nullable Direction direction1 = mirrorBlockEntity.getReflectedDirection(direction, state);
-        BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, beamProperties.intensity, beamProperties.beamPolarization, beamProperties.dyeColor, direction1, beamProperties.beamType);
+        BeamHelper.BeamProperties beamProperties1 = BeamHelper.BeamProperties.withDirection(beamProperties, direction1);
         if(direction1 != null) IBeamSource.propagateLinearBeamVar(iBeamSource, lastPos, beamProperties1, lastIndex);
 
     }

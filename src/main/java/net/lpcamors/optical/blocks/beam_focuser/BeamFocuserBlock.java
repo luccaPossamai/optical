@@ -46,7 +46,10 @@ public class BeamFocuserBlock extends HorizontalKineticBlock implements IWrencha
     public BlockEntityType<? extends BeamFocuserBlockEntity> getBlockEntityType() {
         return COBlockEntities.BEAM_FOCUSER.get();
     }
-
+    @Override
+    public boolean useCenteredIncidence() {
+        return true;
+    }
     @Override
     public void receive(IBeamSource iBeamSource, BlockState state, BlockPos lastPos, BeamHelper.BeamProperties beamProperties, int lastIndex) {
         Direction direction = beamProperties.direction;

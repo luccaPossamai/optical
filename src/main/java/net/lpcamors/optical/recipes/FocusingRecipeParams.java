@@ -5,6 +5,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.blocks.optical_source.BeamHelper;
+import net.lpcamors.optical.config.COConfigs;
 import net.lpcamors.optical.data.IndexedEnum;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -66,25 +66,27 @@ public class FocusingRecipeParams extends ProcessingRecipeBuilder.ProcessingReci
         return id;
     }
 
+    public static Boolean smokingPredicate(Level level, ItemStack itemStack){
+        RecipeWrapper recipeWrapper = new RecipeWrapper(new ItemStackHandler(1));
+        recipeWrapper.setItem(0, itemStack);
+        Optional<SmokingRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(RecipeType.SMOKING, recipeWrapper, level);
+        if (recipe.isPresent())
+            return true;
+        return false;
+    }
+    public static ItemStack smokingMap(Level level, ItemStack itemStack){
+        RecipeWrapper recipeWrapper = new RecipeWrapper(new ItemStackHandler(1));
+        recipeWrapper.setItem(0, itemStack);
+        Optional<SmokingRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(RecipeType.SMOKING, recipeWrapper, level);
+        return recipe.map(smokingRecipe -> smokingRecipe.getResultItem(level.registryAccess())).orElse(ItemStack.EMPTY);
+
+    }
+
     public enum BeamTypeCondition {
         RADIO(0, 6192150),
-        MICROWAVE(1,
-                (level, itemStack) -> {
-            RecipeWrapper recipeWrapper = new RecipeWrapper(new ItemStackHandler(1));
-            recipeWrapper.setItem(0, itemStack);
-            Optional<SmokingRecipe> recipe = level.getRecipeManager()
-                    .getRecipeFor(RecipeType.SMOKING, recipeWrapper, level);
-            if (recipe.isPresent())
-                return true;
-            return false;
-            },
-                (level, itemStack) -> {
-            RecipeWrapper recipeWrapper = new RecipeWrapper(new ItemStackHandler(1));
-            recipeWrapper.setItem(0, itemStack);
-            Optional<SmokingRecipe> recipe = level.getRecipeManager()
-                    .getRecipeFor(RecipeType.SMOKING, recipeWrapper, level);
-            return recipe.map(smokingRecipe -> smokingRecipe.getResultItem(level.registryAccess())).orElse(ItemStack.EMPTY);
-                }, 8991416),
+        MICROWAVE(1, 8991416),
         VISIBLE(2, 0xE88300),
         GAMMA(3, 0x5C93E8),
         NONE(4, 0xffffff)
@@ -93,18 +95,10 @@ public class FocusingRecipeParams extends ProcessingRecipeBuilder.ProcessingReci
         public static final IndexedEnum<BeamTypeCondition> INDEXED = new IndexedEnum<>(true, BeamTypeCondition.values());
 
         private final int id;
-        private final BiFunction<Level, ItemStack, Boolean> bf;
-        private final BiFunction<Level, ItemStack, ItemStack> of;
         private final int color;
 
-        BeamTypeCondition(int id, int color) {
-            this(id, (level, itemStack) -> false, (level, itemStack) -> ItemStack.EMPTY, color);
-        }
-        BeamTypeCondition(int id,  BiFunction<Level, ItemStack, Boolean> bf,
-                          BiFunction<Level, ItemStack, ItemStack> of, int color){
+        BeamTypeCondition(int id, int color){
             this.id = id;
-            this.bf = bf;
-            this.of = of;
             this.color = color;
         }
 
@@ -119,28 +113,22 @@ public class FocusingRecipeParams extends ProcessingRecipeBuilder.ProcessingReci
             return Arrays.stream(BeamTypeCondition.values()).filter(beamTypeCondition1 -> beamTypeCondition1.test(b) && beamTypeCondition1.id != 4).toList().get(0);
         }
 
-        public boolean canProcessItem(ItemStack stack, Level level){
-            return this.bf.apply(level, stack) || NONE.bf.apply(level, stack);
-        }
-
-        public ItemStack getResult(ItemStack stack, Level level){
-            ItemStack stack1 = this.of.apply(level, stack);
-            if(stack1.isEmpty()){
-                stack1 = NONE.of.apply(level, stack);
-            }
-            return stack1;
-        }
         public int getColor(){
             return this.color;
         }
         public String getTranslationKey(){
-            return "create_optical.recipe.required_beam_type."+this.name().toLowerCase();
+            return "required_beam_type."+this.name().toLowerCase();
         }
     }
 
 
     public enum BeamTypeConditionProfile {
-        SMOKING(RecipeType.SMOKING, registryAccess -> recipe -> FocusingRecipe.microwave(new FocusingRecipeParams(recipe.getIngredients().get(0), new ProcessingOutput(recipe.getResultItem(registryAccess), 1F), FocusingRecipeParams.id(recipe, BeamTypeCondition.MICROWAVE)))),
+        SMOKING(RecipeType.SMOKING, registryAccess -> recipe -> {
+            return FocusingRecipe.visible(getFromConfig(List.of(recipe.getIngredients().get(0)), recipe.getResultItem(registryAccess),
+                    Items.CHARCOAL.getDefaultInstance(), COConfigs.server().recipes.focusingSmokingFailedOutputProbability.getF(), FocusingRecipeParams.id(recipe, BeamTypeCondition.MICROWAVE)));
+
+            //FocusingRecipe.microwave(new FocusingRecipeParams(recipe.getIngredients().get(0), new ProcessingOutput(recipe.getResultItem(registryAccess), 1F), FocusingRecipeParams.id(recipe, BeamTypeCondition.MICROWAVE)));
+        }),
 
         ADD_COLOR(BeamTypeConditionProfile::colorItems, registryAccess -> recipe -> {
             Ingredient dye; Ingredient complement;
@@ -151,14 +139,27 @@ public class FocusingRecipeParams extends ProcessingRecipeBuilder.ProcessingReci
                 dye = recipe.getIngredients().get(1);
                 complement = recipe.getIngredients().get(0);
             }
-            return FocusingRecipe.visible(new FocusingRecipeParams(List.of(complement, dye), List.of(new ProcessingOutput(recipe.getResultItem(registryAccess), 0.9F), new ProcessingOutput(new ItemStack(Items.CHARCOAL), 0.1F)), FocusingRecipeParams.id(recipe, BeamTypeCondition.MICROWAVE)));
+            //float failChance = COConfigs.server().recipes.focusingColoringFailedOutputProbability.get().floatValue();
+            //return FocusingRecipe.visible(new FocusingRecipeParams(List.of(complement, dye), List.of(new ProcessingOutput(recipe.getResultItem(registryAccess), 1.0F - failChance), new ProcessingOutput(new ItemStack(Items.CHARCOAL), failChance)), FocusingRecipeParams.id(recipe, BeamTypeCondition.MICROWAVE)));
+            return FocusingRecipe.visible(getFromConfig(List.of(complement, dye), recipe.getResultItem(registryAccess),
+                    Items.CHARCOAL.getDefaultInstance(), COConfigs.server().recipes.focusingColoringFailedOutputProbability.getF(), FocusingRecipeParams.id(recipe, BeamTypeCondition.VISIBLE)));
+
         }),
         SANDPAPER((RecipeType<?>) AllRecipeTypes.SANDPAPER_POLISHING.getType(), registryAccess -> recipe -> {
-
-            return FocusingRecipe.visible(new FocusingRecipeParams(List.of(recipe.getIngredients().get(0), Ingredient.of(Items.SAND)), outputCharcoal(recipe.getResultItem(registryAccess), 0.8F), FocusingRecipeParams.id(recipe, BeamTypeCondition.VISIBLE)));
+            return FocusingRecipe.visible(getFromConfig(List.of(recipe.getIngredients().get(0), Ingredient.of(Items.SAND)), recipe.getResultItem(registryAccess),
+                    Items.CHARCOAL.getDefaultInstance(), COConfigs.server().recipes.focusingSandingFailedOutputProbability.getF(), FocusingRecipeParams.id(recipe, BeamTypeCondition.VISIBLE)));
+            //return FocusingRecipe.visible(new FocusingRecipeParams(List.of(recipe.getIngredients().get(0), Ingredient.of(Items.SAND)), outputCharcoal(recipe.getResultItem(registryAccess), 0.8F), FocusingRecipeParams.id(recipe, BeamTypeCondition.VISIBLE)));
         }),
 
         ;
+
+
+        public static FocusingRecipeParams getFromConfig(List<Ingredient> ingredients, ItemStack output, ItemStack failOutput, float failChance, ResourceLocation locName){
+            List<ProcessingOutput> outputs = new ArrayList<>();
+            outputs.add(new ProcessingOutput(output, 1.0F - failChance));
+            if(failChance > 0.0) outputs.add(new ProcessingOutput(failOutput, failChance));
+            return new FocusingRecipeParams(ingredients, outputs, locName);
+        }
         private static boolean colorItems(Recipe<?> r){
             return r.getIngredients().size() == 2 && (r.getIngredients().get(0).getItems()[0].getItem() instanceof DyeItem ^ r.getIngredients().get(1).getItems()[0].getItem() instanceof DyeItem);
         }

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "L": {
+      "item": "create_optical:optical_device"
+    },
+    "P": {
+      "item": "create_optical:polarizing_filter"
+    },
+    "S": {
+      "item": "create:shaft"
+    },
+    "T": {
+      "item": "create:fluid_tank"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "LTP",
+    "CSC"
+  ],
+  "result": {
+    "item": "create_optical:thermal_optical_source"
+  },
+  "show_notification": true
+}

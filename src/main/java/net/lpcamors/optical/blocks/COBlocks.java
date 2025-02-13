@@ -10,6 +10,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.blocks.absorption_polarizing_filter.AbsorptionPolarizingFilter;
 import net.lpcamors.optical.blocks.encased_mirror.EncasedMirrorBlock;
+import net.lpcamors.optical.blocks.hologram_source.HologramSourceBlock;
 import net.lpcamors.optical.blocks.optical_receptor.OpticalReceptorBlock;
 import net.lpcamors.optical.blocks.optical_receptor.OpticalReceptorGenerator;
 import net.lpcamors.optical.blocks.optical_sensor.OpticalSensorBlock;
@@ -17,6 +18,7 @@ import net.lpcamors.optical.blocks.optical_source.OpticalSourceBlock;
 import net.lpcamors.optical.blocks.polarizing_beam_splitter_block.PolarizingBeamSplitterBlock;
 import net.lpcamors.optical.blocks.beam_condenser.BeamCondenserBlock;
 import net.lpcamors.optical.blocks.beam_focuser.BeamFocuserBlock;
+import net.lpcamors.optical.blocks.thermal_optical_source.ThermalOpticalSourceBlock;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.material.MapColor;
@@ -36,12 +38,25 @@ public class COBlocks {
                     .transform(BlockStressDefaults.setImpact(8.0))
                     .register();
 
+    public static final BlockEntry<ThermalOpticalSourceBlock> THERMAL_OPTICAL_SOURCE =
+            COMod.REGISTRATE.block("thermal_optical_source", ThermalOpticalSourceBlock::new)
+                    .initialProperties(SharedProperties::stone)
+                    .properties(p -> p.mapColor(MapColor.COLOR_GRAY))
+                    .transform(TagGen.axeOrPickaxe())
+                    .blockstate(BlockStateGen.horizontalBlockProvider(true))
+                    .addLayer(() -> RenderType::cutout)
+                    .item()
+                    .transform(ModelGen.customItemModel())
+                    .transform(BlockStressDefaults.setImpact(16.0))
+                    .register();
+
+
     public static final BlockEntry<OpticalReceptorBlock> LIGHT_OPTICAL_RECEPTOR =
             COMod.REGISTRATE.block("optical_receptor", OpticalReceptorBlock::light)
                     .initialProperties(SharedProperties::stone)
                     .properties(p -> p.mapColor(MapColor.COLOR_GRAY))
                     .transform(TagGen.axeOrPickaxe())
-                    .blockstate(new OpticalReceptorGenerator.LightReceptor()::generate)
+                    .blockstate(OpticalReceptorGenerator.LIGHT::generate)
                     .addLayer(() -> RenderType::cutoutMipped)
                     .item()
                     .transform(ModelGen.customItemModel())
@@ -54,7 +69,7 @@ public class COBlocks {
                     .initialProperties(SharedProperties::stone)
                     .properties(p -> p.mapColor(MapColor.COLOR_GRAY))
                     .transform(TagGen.axeOrPickaxe())
-                    .blockstate(new OpticalReceptorGenerator.HeavyReceptor()::generate)
+                    .blockstate(OpticalReceptorGenerator.HEAVY::generate)
                     .addLayer(() -> RenderType::cutoutMipped)
                     .item()
                     .transform(ModelGen.customItemModel())
@@ -129,6 +144,17 @@ public class COBlocks {
                     .transform(BlockStressDefaults.setImpact(4.0))
                     .transform(BlockStressDefaults.setGeneratorSpeed(() -> Couple.create(0, 256)))
                     .register();
+    public static final BlockEntry<HologramSourceBlock> HOLOGRAM_SOURCE =
+            COMod.REGISTRATE.block("hologram_source", HologramSourceBlock::new)
+                    .initialProperties(SharedProperties::stone)
+                    .properties(p -> p.mapColor(MapColor.COLOR_GRAY))
+                    .transform(TagGen.axeOrPickaxe())
+                    .blockstate((c, p) -> p.horizontalBlock(c.get(), HologramSourceBlock.getBlockModel(c, p)))
+                    .addLayer(() -> RenderType::solid)
+                    .item()
+                    .transform(ModelGen.customItemModel())
+                    .register();
+
 
 
     public static void initiate(){}

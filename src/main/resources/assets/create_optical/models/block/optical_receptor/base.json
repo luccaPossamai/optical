@@ -6,8 +6,7 @@
 	"textures": {
 		"0": "create_optical:block/optical_receptor/light_optical_receptor_coil",
 		"1": "create_optical:block/optical_receptor/optical_receptor_base",
-		"particle": "create_optical:block/optical_receptor/light_optical_receptor_coil",
-		"laser": "create_optical:block/optical_source/optical_source_laser"
+		"particle": "create_optical:block/optical_receptor/light_optical_receptor_coil"
 	},
 	"elements": [
 		{
@@ -20,29 +19,6 @@
 				"west": {"uv": [0, 4.5, 6, 9], "texture": "#0"},
 				"up": {"uv": [0, 0, 6, 4.5], "rotation": 90, "texture": "#0"},
 				"down": {"uv": [6.5, 4.5, 12.5, 9], "rotation": 90, "texture": "#0"}
-			}
-		},
-		{
-			"from": [1.5, 5.5, 5.5],
-			"to": [3.5, 10.5, 10.5],
-			"faces": {
-				"north": {"uv": [3, 2.5, 4, 5], "texture": "#laser"},
-				"south": {"uv": [3, 5, 4, 2.5], "rotation": 180, "texture": "#laser"},
-				"west": {"uv": [4, 0, 6.5, 2.5], "texture": "#laser"},
-				"up": {"uv": [3, 0, 4, 2.5], "rotation": 180, "texture": "#laser"},
-				"down": {"uv": [4, 5, 3, 7.5], "texture": "#laser"}
-			}
-		},
-		{
-			"from": [12.5, 5.5, 5.5],
-			"to": [14.5, 10.5, 10.5],
-			"rotation": {"angle": 0, "axis": "y", "origin": [13.5, 5.5, 8]},
-			"faces": {
-				"north": {"uv": [4, 2.5, 3, 5], "texture": "#laser"},
-				"east": {"uv": [4, 0, 6.5, 2.5], "texture": "#laser"},
-				"south": {"uv": [3, 2.5, 4, 5], "texture": "#laser"},
-				"up": {"uv": [3, 0, 4, 2.5], "texture": "#laser"},
-				"down": {"uv": [4, 7.5, 3, 5], "rotation": 180, "texture": "#laser"}
 			}
 		},
 		{
@@ -85,13 +61,11 @@
 	],
 	"groups": [
 		0,
-		1,
-		2,
 		{
 			"name": "group",
 			"origin": [8, 8, 8],
 			"color": 0,
-			"children": [3, 4, 5]
+			"children": [1, 2, 3]
 		}
 	]
 }

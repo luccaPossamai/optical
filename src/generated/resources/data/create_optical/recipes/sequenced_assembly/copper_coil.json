@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "create:andesite_alloy"
   },
-  "loops": 8,
+  "loops": 3,
   "results": [
     {
       "chance": 100.0,

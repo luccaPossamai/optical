@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.blocks.optical_source.BeamHelper;
+import net.lpcamors.optical.data.COLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -41,8 +42,8 @@ public class AbsorptionPolarizingFilterBlockEntity extends SmartBlockEntity impl
             if (beamPolarization.isDiagonal() && !direction.equals(blockDirection)) {
                 beamPolarization = beamPolarization.getNextRotated(2);
             }
-            Lang.text("").add(Components.translatable(("create." + COMod.ID + ".gui.goggles.polarization")).withStyle(ChatFormatting.GRAY)).forGoggles(tooltip);
-            Lang.text("").add(Components.translatable(beamPolarization.getDescriptionId()).append(" " + beamPolarization.getsIcon()).withStyle(ChatFormatting.AQUA)).forGoggles(tooltip, 1);
+            Lang.text("").add(COLang.Prefixes.CREATE.translate(("gui.goggles.polarization")).withStyle(ChatFormatting.GRAY)).forGoggles(tooltip);
+            Lang.text("").add(COLang.Prefixes.CREATE.translate(beamPolarization.getDescriptionId()).append(" " + beamPolarization.getsIcon()).withStyle(ChatFormatting.AQUA)).forGoggles(tooltip, 1);
 
         }
         return true;

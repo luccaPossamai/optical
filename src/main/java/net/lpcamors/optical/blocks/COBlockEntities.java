@@ -2,16 +2,17 @@ package net.lpcamors.optical.blocks;
 
 import com.simibubi.create.content.kinetics.base.HorizontalHalfShaftInstance;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
-import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.lpcamors.optical.blocks.absorption_polarizing_filter.AbsorptionPolarizingFilterBlockEntity;
 import net.lpcamors.optical.blocks.beam_focuser.BeamFocuserBlockEntity;
 import net.lpcamors.optical.blocks.encased_mirror.EncasedMirrorBlockEntity;
+import net.lpcamors.optical.blocks.hologram_source.HologramSourceBlockEntity;
 import net.lpcamors.optical.blocks.optical_receptor.OpticalReceptorBlockEntity;
 import net.lpcamors.optical.blocks.optical_sensor.OpticalSensorBlockEntity;
 import net.lpcamors.optical.blocks.polarizing_beam_splitter_block.PolarizingBeamSplitterBlockEntity;
 import net.lpcamors.optical.blocks.beam_condenser.BeamCondenserBlockEntity;
-import net.lpcamors.optical.blocks.optical_source.OpticalSourceBlockEntityVar;
+import net.lpcamors.optical.blocks.optical_source.OpticalSourceBlockEntity;
+import net.lpcamors.optical.blocks.thermal_optical_source.ThermalOpticalSourceBlockEntity;
 import net.lpcamors.optical.renderers.*;
 
 import static com.simibubi.create.Create.REGISTRATE;
@@ -20,19 +21,31 @@ public class COBlockEntities {
 
     public static void initiate(){}
 
-    public static final BlockEntityEntry<OpticalSourceBlockEntityVar> OPTICAL_SOURCE = REGISTRATE
-            .blockEntity("optical_source", OpticalSourceBlockEntityVar::new)
+    public static final BlockEntityEntry<OpticalSourceBlockEntity> OPTICAL_SOURCE = REGISTRATE
+            .blockEntity("optical_source", OpticalSourceBlockEntity::new)
             .instance(() -> HorizontalHalfShaftInstance::new)
             .validBlocks(COBlocks.OPTICAL_SOURCE)
             .renderer(() -> OpticalSourceRenderer::new)
             .register();
+    public static final BlockEntityEntry<ThermalOpticalSourceBlockEntity> THERMAL_OPTICAL_SOURCE = REGISTRATE
+            .blockEntity("thermal_optical_source", ThermalOpticalSourceBlockEntity::new)
+            .instance(() -> HorizontalHalfShaftInstance::new)
+            .validBlocks(COBlocks.THERMAL_OPTICAL_SOURCE)
+            .renderer(() -> ThermalOpticalSourceRenderer::new)
+            .register();
 
 
     public static final BlockEntityEntry<OpticalReceptorBlockEntity> OPTICAL_RECEPTOR = REGISTRATE
-            .blockEntity("optical_receptor", OpticalReceptorBlockEntity::new)
+            .blockEntity("optical_receptor", OpticalReceptorBlockEntity::speed)
             .instance(() -> ShaftInstance::new)
-            .validBlocks(COBlocks.LIGHT_OPTICAL_RECEPTOR, COBlocks.HEAVY_OPTICAL_RECEPTOR)
-            .renderer(() -> ShaftRenderer::new)
+            .validBlocks(COBlocks.LIGHT_OPTICAL_RECEPTOR)
+            .renderer(() -> OpticalReceptorRenderer::new)
+            .register();
+    public static final BlockEntityEntry<OpticalReceptorBlockEntity> CAPACITY_OPTICAL_RECEPTOR = REGISTRATE
+            .blockEntity("optical_receptor_capacity", OpticalReceptorBlockEntity::capacity)
+            .instance(() -> ShaftInstance::new)
+            .validBlocks(COBlocks.HEAVY_OPTICAL_RECEPTOR)
+            .renderer(() -> OpticalReceptorRenderer::new)
             .register();
     public static final BlockEntityEntry<EncasedMirrorBlockEntity> ENCASED_MIRROR = REGISTRATE
             .blockEntity("encased_mirror", EncasedMirrorBlockEntity::new)
@@ -70,6 +83,13 @@ public class COBlockEntities {
             .validBlocks(COBlocks.BEAM_FOCUSER)
             .renderer(() -> BeamFocuserRenderer::new)
             .register();
+
+    public static final BlockEntityEntry<HologramSourceBlockEntity> HOLOGRAM_SOURCE = REGISTRATE
+            .blockEntity("hologram_source", HologramSourceBlockEntity::new)
+            .validBlocks(COBlocks.HOLOGRAM_SOURCE)
+            .renderer(() -> HologramSourceRenderer::new)
+            .register();
+
 
 
 }

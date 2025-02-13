@@ -9,6 +9,7 @@ import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.blocks.IBeamReceiver;
 import net.lpcamors.optical.blocks.optical_source.BeamHelper;
 import net.lpcamors.optical.blocks.COBlocks;
+import net.lpcamors.optical.data.COLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -92,8 +93,8 @@ public class OpticalSensorBlockEntity extends SmartBlockEntity implements IHaveG
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         Lang.builder("tooltip").translate(COMod.ID +".gui.goggles.optical_sensor").forGoggles(tooltip);
 
-        Lang.text("").add(Components.translatable(("create." + COMod.ID + ".gui.goggles.optical_sensor.mode")).withStyle(ChatFormatting.GRAY)).forGoggles(tooltip);
-        Lang.text("").add(Components.translatable(this.getBlockState().getValue(OpticalSensorBlock.MODE).getDescriptionId()).withStyle(ChatFormatting.AQUA)).forGoggles(tooltip, 1);
+        Lang.text("").add(COLang.Prefixes.CREATE.translate(("gui.goggles.optical_sensor.mode")).withStyle(ChatFormatting.GRAY)).forGoggles(tooltip);
+        Lang.text("").add(COLang.Prefixes.CREATE.translate(this.getBlockState().getValue(OpticalSensorBlock.MODE).getDescriptionId()).withStyle(ChatFormatting.AQUA)).forGoggles(tooltip, 1);
 
         return true;
     }

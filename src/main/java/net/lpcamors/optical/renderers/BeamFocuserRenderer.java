@@ -66,9 +66,8 @@ public class BeamFocuserRenderer extends ShaftRenderer<BeamFocuserBlockEntity> {
             kineticRotationTransform(focusBeam, be, rotDirection, AngleHelper.rad(angle), light);//.renderInto(ms, vb);
             kineticRotationTransform(focusBeam1, be, rotDirection, AngleHelper.rad(angle), light);//.renderInto(ms, vb1);
             be.getBeamSourceInstance().optionalBeamProperties().ifPresent(beamProperties -> {
-                int color = beamProperties.dyeColor.getFireworkColor();
-                focusBeam.color(beamProperties.dyeColor.getFireworkColor()).light(15728880).renderInto(ms, vb);
-                focusBeam1.color((color >> 16) & 0xFF, (color >> 8) & 0xFF, (color & 0xFF), 255).light(15728880).renderInto(ms, vb1);
+                focusBeam.color(beamProperties.color.getX(), beamProperties.color.getY(),beamProperties.color.getZ(), 255).light(15728880).renderInto(ms, vb);
+                focusBeam1.color(beamProperties.color.getX(), beamProperties.color.getY(),beamProperties.color.getZ(), 255).light(15728880).renderInto(ms, vb1);
             });
         }
         ms.popPose();

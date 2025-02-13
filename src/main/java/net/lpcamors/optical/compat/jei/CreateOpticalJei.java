@@ -23,6 +23,7 @@ import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.CORecipeTypes;
 import net.lpcamors.optical.blocks.COBlocks;
 import net.lpcamors.optical.data.CODataGen;
+import net.lpcamors.optical.data.COLang;
 import net.lpcamors.optical.data.FocusingRecipeGen;
 import net.lpcamors.optical.recipes.FocusingRecipe;
 import net.lpcamors.optical.recipes.FocusingRecipeCategory;
@@ -215,7 +216,7 @@ public class CreateOpticalJei implements IModPlugin {
 
             CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(
                     new mezz.jei.api.recipe.RecipeType<>(COMod.loc(name), recipeClass),
-                    Component.translatable(COMod.ID + ".recipe." + name), background, icon, recipesSupplier, catalysts);
+                    COLang.Prefixes.JEI.translate( name), background, icon, recipesSupplier, catalysts);
             CreateRecipeCategory<T> category = factory.create(info);
             return category;
         }

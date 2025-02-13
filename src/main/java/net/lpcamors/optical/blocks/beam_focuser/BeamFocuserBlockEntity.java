@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.lpcamors.optical.COMod;
 import net.lpcamors.optical.blocks.IBeamReceiver;
 import net.lpcamors.optical.blocks.optical_source.BeamHelper;
+import net.lpcamors.optical.data.COLang;
 import net.lpcamors.optical.recipes.AnimatedFocus;
 import net.lpcamors.optical.recipes.FocusingRecipe;
 import net.minecraft.ChatFormatting;
@@ -263,8 +264,8 @@ public class BeamFocuserBlockEntity extends KineticBlockEntity implements IHaveG
         Lang.builder("tooltip").translate(COMod.ID +".gui.goggles.beam_properties").forGoggles(tooltip);
 
         if(this.beamSourceInstance != null && this.beamSourceInstance.optionalBeamProperties().isPresent()){
-            Lang.text("").add(Components.translatable(("create." + COMod.ID + ".gui.goggles.beam_type")).withStyle(ChatFormatting.GRAY)).forGoggles(tooltip);
-            Lang.text("").add(Components.translatable(this.beamSourceInstance.optionalBeamProperties().get().beamType.getDescriptionId()).withStyle(ChatFormatting.AQUA)).forGoggles(tooltip, 1);
+            Lang.text("").add(COLang.Prefixes.CREATE.translate(("create." + COMod.ID + ".gui.goggles.beam_type")).withStyle(ChatFormatting.GRAY)).forGoggles(tooltip);
+            Lang.text("").add(COLang.Prefixes.CREATE.translate(this.beamSourceInstance.optionalBeamProperties().get().beamType.getDescriptionId()).withStyle(ChatFormatting.AQUA)).forGoggles(tooltip, 1);
         }
 
         return super.addToGoggleTooltip(tooltip, isPlayerSneaking);

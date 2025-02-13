@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "minecraft:tinted_glass"
   },
-  "loops": 5,
+  "loops": 1,
   "results": [
     {
       "chance": 100.0,

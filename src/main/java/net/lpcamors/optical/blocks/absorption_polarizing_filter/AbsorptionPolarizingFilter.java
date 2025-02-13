@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -55,6 +56,12 @@ public class AbsorptionPolarizingFilter extends HorizontalDirectionalBlock imple
         return IWrenchable.super.onWrenched(state, context);
     }
 
+
+    @Override
+    public boolean useCenteredIncidence() {
+        return true;
+    }
+
     @Override
     public void receive(IBeamSource iBeamSource, BlockState state, BlockPos lastPos, BeamHelper.BeamProperties beamProperties, int lastIndex) {
         Direction direction = beamProperties.direction;
@@ -67,7 +74,7 @@ public class AbsorptionPolarizingFilter extends HorizontalDirectionalBlock imple
         }
         float intensity = beamProperties.beamPolarization.getRemainingIntensity(beamProperties.intensity, beamPolarization);
         if(intensity > 0){
-            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, intensity, beamPolarization, beamProperties.dyeColor, direction, beamProperties.beamType);
+            BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(intensity, beamPolarization, beamProperties.color, direction, beamProperties.spin, beamProperties.beamType);
             IBeamSource.propagateLinearBeamVar(iBeamSource, lastPos, beamProperties1, lastIndex);
         }
     }

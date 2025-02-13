@@ -39,35 +39,42 @@ import java.util.function.UnaryOperator;
 public class COSequencedAssemblyRecipeProvider extends CreateRecipeProvider {
 
     GeneratedRecipe
-
             MIRROR = createSequenced("mirror_item", b -> b.require(Items.GLASS_PANE)
                     .transitionTo(COItems.INCOMPLETE_MIRROR)
                     .addOutput(COItems.MIRROR, 100)
+                    .loops(1)
                     .addStep(FillingRecipe::new, rb -> rb.require(Fluids.WATER, 250))
                     .addStep(PressingRecipe::new, rb -> rb)
                     .addStep(PressingRecipe::new, rb -> rb)),
             POLARIZING_FILTER = createSequenced("polarizing_filter", b -> b.require(Items.TINTED_GLASS)
                     .transitionTo(COItems.INCOMPLETE_POLARIZING_FILTER)
                     .addOutput(COItems.POLARIZING_FILTER, 100)
+                    .loops(1)
                     .addStep(FillingRecipe::new, rb -> rb.require(Fluids.WATER, 250))
                     .addStep(PressingRecipe::new, rb -> rb)
                     .addStep(PressingRecipe::new, rb -> rb)),
-
             OPTICAL_DEVICE = createSequenced("optical_device", b -> b.require(Items.AMETHYST_SHARD)
                     .transitionTo(COItems.INCOMPLETE_OPTICAL_DEVICE)
                     .addOutput(COItems.OPTICAL_DEVICE, 100)
-                    .loops(5)
+                    .loops(3)
                     .addStep(DeployerApplicationRecipe::new, rb -> rb.require(AllItems.IRON_SHEET))
-                    .addStep(DeployerApplicationRecipe::new, rb -> rb.require(Items.GLASS))
+                    .addStep(DeployerApplicationRecipe::new, rb -> rb.require(Items.GLASS_PANE))
                     .addStep(FillingRecipe::new, rb -> rb.require(Fluids.WATER, 500))
                     .addStep(PressingRecipe::new, rb -> rb)),
-
-            COPPER_COIL = coil("copper", COItems.COPPER_COIL, 8),
-            GOLDEN_COIL = coil("golden", COItems.GOLDEN_COIL, 16),
-            ROSE_QUARTZ_CATALYST_COIL = coil("rose_quartz_catalyst", COItems.ROSE_QUARTZ_CATALYST_COIL, 4,
+            OPTICAL_DEVICE_FOCUSING = createSequenced("optical_device_focusing", b -> b.require(AllItems.IRON_SHEET)
+                            .transitionTo(COItems.INCOMPLETE_OPTICAL_DEVICE)
+                            .addOutput(COItems.OPTICAL_DEVICE, 100)
+                            .loops(1)
+                            .addStep(DeployerApplicationRecipe::new, rb -> rb.require(Items.AMETHYST_SHARD))
+                            .addStep(DeployerApplicationRecipe::new, rb -> rb.require(AllItems.IRON_SHEET))
+                            .addStep(DeployerApplicationRecipe::new, rb -> rb.require(Items.GLASS_PANE))
+                            .addStep(DeployerApplicationRecipe::new, rb -> rb.require(AllItems.IRON_SHEET))
+                            .addStep(FocusingRecipe::gamma, p -> p)),
+            COPPER_COIL = coil("copper", COItems.COPPER_COIL, 3),
+            GOLDEN_COIL = coil("golden", COItems.GOLDEN_COIL, 6),
+            ZINC_COIL = coil("zinc", COItems.ZINC_COIL, 4),
+            ROSE_QUARTZ_CATALYST_COIL = coil("rose_quartz_catalyst", COItems.ROSE_QUARTZ_CATALYST_COIL, 3,
                     FocusingRecipe::gamma, rb -> rb),
-
-
             OPTICAL_SOURCE = viaShaped(COBlocks.OPTICAL_SOURCE::asItem,
                     b -> b.define('C', AllBlocks.COGWHEEL)
                             .define('A', AllBlocks.ANDESITE_CASING)
@@ -78,6 +85,24 @@ public class COSequencedAssemblyRecipeProvider extends CreateRecipeProvider {
                             .pattern("LAP")
                             .pattern(" S "),
                     has(AllBlocks.ANDESITE_CASING::get)),
+            THERMAL_OPTICAL_SOURCE = viaShaped(COBlocks.THERMAL_OPTICAL_SOURCE::asItem,
+                            b -> b.define('C', Items.COPPER_INGOT)
+                                    .define('T', AllBlocks.FLUID_TANK)
+                                    .define('S', AllBlocks.SHAFT)
+                                    .define('P', COItems.POLARIZING_FILTER)
+                                    .define('L', COItems.OPTICAL_DEVICE)
+                                    .pattern("CCC")
+                                    .pattern("LTP")
+                                    .pattern("CSC"),
+                            has(AllBlocks.ANDESITE_CASING::get)),
+            HOLOGRAM_SOURCE = viaShaped(COBlocks.HOLOGRAM_SOURCE::asItem,
+                            b -> b.define('Z', COItems.ZINC_COIL)
+                                    .define('C', AllBlocks.ANDESITE_CASING)
+                                    .define('L', COItems.OPTICAL_DEVICE)
+                                    .define('I', AllItems.ZINC_INGOT)
+                                    .pattern("IZI")
+                                    .pattern("LCL"),
+                            has(AllBlocks.ANDESITE_CASING::get)),
             LIGHT_RECEPTOR = viaShaped(COBlocks.LIGHT_OPTICAL_RECEPTOR::asItem,
                     b -> b.define('A', AllBlocks.ANDESITE_CASING)
                             .define('S', AllBlocks.SHAFT)

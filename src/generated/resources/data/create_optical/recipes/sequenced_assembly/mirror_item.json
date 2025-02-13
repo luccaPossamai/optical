@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "minecraft:glass_pane"
   },
-  "loops": 5,
+  "loops": 1,
   "results": [
     {
       "chance": 100.0,

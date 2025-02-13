@@ -4,10 +4,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.RenderTypes;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import net.lpcamors.optical.COMod;
+import net.lpcamors.optical.COPartialModels;
+import net.lpcamors.optical.COUtils;
+import net.lpcamors.optical.blocks.absorption_polarizing_filter.AbsorptionPolarizingFilter;
 import net.lpcamors.optical.blocks.optical_source.BeamHelper;
 import net.lpcamors.optical.data.COTags;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -76,7 +83,7 @@ public interface IBeamSource {
                 // Check if there is a BeaconBeamBlock in the way(colorizes the beam)
             } else if(state.getBlock() instanceof BeaconBeamBlock beaconBeamBlock) {
                 iBeamSource.addToBeamBlocks(initialPos, vec3, beamProperties);
-                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.speed, beamProperties.intensity, beamProperties.beamPolarization, beaconBeamBlock.getColor(), direction, beamProperties.beamType);
+                BeamHelper.BeamProperties beamProperties1 = new BeamHelper.BeamProperties(beamProperties.intensity, beamProperties.beamPolarization, BeamHelper.colorSum(beamProperties.color, COUtils.getColor(beaconBeamBlock.getColor()) ), direction, beamProperties.spin, beamProperties.beamType);
                 IBeamSource.propagateLinearBeamVar(iBeamSource, lastPos, beamProperties1, i + 1);
                 break;
 
@@ -96,13 +103,14 @@ public interface IBeamSource {
         public static final ResourceLocation LASER_BEAM_LOCATION = new ResourceLocation(COMod.ID, "textures/block/optical_source/optical_source_laser_beam.png");
         static final RenderType LASER_BEAM_RENDER_TYPE = RenderType.entityTranslucentEmissive(LASER_BEAM_LOCATION, true);
 
-        public static void renderLaserBeam(IBeamSource iBeamSource, float partialTicks, PoseStack ms, MultiBufferSource multiBufferSource, int light){
+        @Deprecated
+        public static void renderLaserBeam(IBeamSource iBeamSource, float partialTicks, PoseStack ms, MultiBufferSource multiBufferSource, int light) {
             Vec3 pos = iBeamSource.getBlockPos().getCenter();
             List<Pair<Vec3i, Vec3i>> blockPosToBeam = iBeamSource.getBeamPropertiesMap().keySet().stream().toList();
-            for(int i = 0; i < blockPosToBeam.size(); i ++){
+            for (int i = 0; i < blockPosToBeam.size(); i++) {
                 Pair<Vec3i, Vec3i> pair = blockPosToBeam.get(i);
                 BeamHelper.BeamProperties beamProperties = iBeamSource.getBeamPropertiesMap().get(pair);
-                Vec3i rgb = BeamHelper.ofDyeColor(beamProperties.dyeColor);
+                Vec3i rgb = beamProperties.color;
                 int alpha = (int) (beamProperties.intensity * 255);
                 Vec3 vec = Vec3.atCenterOf(pair.getFirst());
                 Vec3 vec1 = Vec3.atCenterOf(pair.getSecond());
@@ -119,12 +127,13 @@ public interface IBeamSource {
                 float f1 = Mth.sqrt((float) (x * x + y * y + z * z));
                 ms.pushPose();
                 ms.translate(0.5f, 0.5F, 0.5F);
-                ms.translate(vec.x  - pos.x, vec.y - pos.y, vec.z - pos.z);
+                ms.translate(vec.x - pos.x, vec.y - pos.y, vec.z - pos.z);
 
-                ms.mulPose(Axis.YP.rotation((float)(-Math.atan2(z, x) + Math.PI / 2)));
-                ms.mulPose(Axis.XP.rotation((float)(Math.atan2(f, y) - Math.PI / 2)));
+                ms.mulPose(Axis.YP.rotation((float) (-Math.atan2(z, x) + Math.PI / 2)));
+                ms.mulPose(Axis.XP.rotation((float) (Math.atan2(f, y) - Math.PI / 2)));
                 VertexConsumer vertexconsumer = multiBufferSource.getBuffer(RenderTypes.getGlowingTranslucent(LASER_BEAM_LOCATION));
-                float t = (float) ((partialTicks + iBeamSource.getTickCount()) * (1 + Math.floor(Math.abs(iBeamSource.getInitialBeamProperties().speed) / 64)));
+                int intensityMultiplier = 1 + (int) Math.floor(beamProperties.intensity / 16);
+                float t = (partialTicks + iBeamSource.getTickCount()) * intensityMultiplier;
                 float f2 = 0.0F - t * 1e-2F;
                 float f3 = Mth.sqrt((float) (x * x + y * y + z * z)) / 32.0F - t * 0.01F;
                 float radius = 0.05f;
@@ -134,8 +143,8 @@ public interface IBeamSource {
                 PoseStack.Pose posestack$pose = ms.last();
                 Matrix4f matrix4f = posestack$pose.pose();
                 Matrix3f matrix3f = posestack$pose.normal();
-                for(int k = 0; k < 3 + Math.floor(Math.abs(beamProperties.intensity * beamProperties.speed) / 64) ; k++) {
-                    if(k > 0) {
+                for (int k = 0; k < 3 + intensityMultiplier; k++) {
+                    if (k > 0) {
                         radius *= 1.2F;
                         vertexconsumer = multiBufferSource.getBuffer(RenderTypes.getOutlineTranslucent(LASER_BEAM_LOCATION, true));
                         alpha = (int) (alpha * 0.75F);
@@ -160,6 +169,83 @@ public interface IBeamSource {
             }
         }
 
+        public static void renderLaserBeam(IBeamSource be, BlockState state, PoseStack ms, MultiBufferSource buffer) {
+
+            Vec3 pos = be.getBlockPos().getCenter();
+            //IBeamSource.ClientSide.renderLaserBeam(opticalLaserSourceBlockEntity, partialTicks, ms, buffer, light);
+
+            List<Pair<Vec3i, Vec3i>> blockPosToBeam = be.getBeamPropertiesMap().keySet().stream().toList();
+
+            Direction direction = state.getValue(AbsorptionPolarizingFilter.FACING);
+
+            for (int i = 0; i < blockPosToBeam.size(); i++) {
+
+                Pair<Vec3i, Vec3i> pair = blockPosToBeam.get(i);
+
+                BeamHelper.BeamProperties beamProperties = be.getBeamPropertiesMap().get(pair);
+                direction = beamProperties.direction;
+                Vec3 start0 = Vec3.atCenterOf(pair.getFirst());
+                Vec3 end0 = Vec3.atCenterOf(pair.getSecond());
+
+                Vec3 start = start0.subtract(IBeamReceiver.getLaserIrradiatedFaceOffsetVar(beamProperties.direction, new BlockPos(pair.getFirst()), be.getLevel()));
+                Vec3 end = end0.add(IBeamReceiver.getLaserIrradiatedFaceOffsetVar(beamProperties.direction, new BlockPos(pair.getSecond()), be.getLevel()));
+
+                ms.pushPose();
+
+                translateForVec(ms, start0.subtract(pos));
+                translateForVec(ms, start.subtract(start0));
+                translateForVec(ms, end.subtract(start).multiply(0.5D, 0.5D, 0.5D));
+                //Vec3 vec2 = end.subtract(start);
+                //ms.translate(vec2.x / 2, vec3.y / 2,vec3.z / 2);
+
+
+                float f = (float) end.subtract(start).length();
+                float f1 = (float) end.subtract(start).length();
+
+                SuperByteBuffer laser = CachedBufferer.partial(COPartialModels.LASER_BEAM, state)
+                        .light(LightTexture.FULL_BRIGHT)
+                        .disableDiffuse();
+
+
+                Vec3 dir = direction.getAxisDirection() == Direction.AxisDirection.POSITIVE ?
+                        Vec3.atLowerCornerOf(direction.getNormal()) :
+                        Vec3.atLowerCornerOf(direction.getNormal()).scale(-1);
+                Vec3 nDir = new Vec3(1, 1, 1).subtract(dir);
+
+                Vec3i color = beamProperties.color;
+                int jMax = 3 + (int) Math.floor(beamProperties.intensity / 32);
+                int jRest = Math.max(0, jMax - 10);
+                jMax = Math.min(10, jMax);
+                for (int j = 0; j < jMax; j++) {
+                    SuperByteBuffer laser0 = laser;
+                    double radius = 0.8 + (j + jRest) * 0.2;
+                    int alpha = (int) (255 * (1 - j / 10F));
+                    laser0.color(color.getX(), color.getY(), color.getZ(), alpha);
+                    scaleForVec(laser0, dir.scale(f).add(nDir));
+                    scaleForVec(laser0, nDir.scale(radius).add(dir));
+                    rotateDirection(laser0, direction);
+                    laser0.renderInto(ms, j == 0 ? buffer.getBuffer(RenderTypes.getAdditive()) : buffer.getBuffer(RenderType.translucentNoCrumbling()));
+                }
+                ms.popPose();
+            }
+        }
+
+        static void translateForVec(PoseStack ms, Vec3 vec3) {
+            ms.translate(vec3.x, vec3.y, vec3.z);
+        }
+
+        static void scaleForVec(SuperByteBuffer s, Vec3 vec3) {
+            s.centre().scale((float) vec3.x, (float) vec3.y, (float) vec3.z).unCentre();
+        }
+
+        static void rotateDirection(SuperByteBuffer buffer, Direction direction) {
+            float yRot = (float) (AngleHelper.horizontalAngle(direction) * Math.PI / 180f);
+            float xRot = direction.getStepY() * (float) Math.PI / 2F;
+            buffer.rotateCentered(Direction.UP, yRot);
+            buffer.rotateCentered(Direction.EAST, xRot);
+
+        }
     }
+
 
 }

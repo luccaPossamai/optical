@@ -1,6 +1,8 @@
 package net.lpcamors.optical.blocks.beam_condenser;
 
+import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.utility.Iterate;
 import net.lpcamors.optical.COShapes;
 import net.lpcamors.optical.blocks.COBlockEntities;
 import net.lpcamors.optical.blocks.IBeamReceiver;
@@ -20,6 +22,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 
 public class BeamCondenserBlock extends HorizontalDirectionalBlock implements IBeamReceiver, IBE<BeamCondenserBlockEntity> {
 
@@ -37,7 +41,34 @@ public class BeamCondenserBlock extends HorizontalDirectionalBlock implements IB
     }
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
+        Direction preferredFacing = getPreferredFacing(context);
+        if (preferredFacing == null)
+            preferredFacing = (Direction) Arrays.stream(context.getNearestLookingDirections()).filter(direction -> direction.getAxis().isHorizontal()).toArray()[0];
+        return defaultBlockState().setValue(FACING, context.getPlayer() != null && context.getPlayer()
+                .isShiftKeyDown() ? preferredFacing : preferredFacing.getOpposite());
+    }
+    @Override
+    public boolean useCenteredIncidence() {
+        return false;
+    }
+    public Direction getPreferredFacing(BlockPlaceContext context) {
+        Direction prefferedSide = null;
+        for (Direction side : Iterate.directions) {
+            BlockState blockState = context.getLevel()
+                    .getBlockState(context.getClickedPos()
+                            .relative(side));
+            if (blockState.getBlock() instanceof IRotate) {
+                if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getLevel(), context.getClickedPos()
+                        .relative(side), blockState, side.getOpposite()))
+                    if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
+                        prefferedSide = null;
+                        break;
+                    } else {
+                        prefferedSide = side;
+                    }
+            }
+        }
+        return prefferedSide != null && prefferedSide.getAxis().isVertical() ? null : prefferedSide;
     }
 
     @Override

@@ -19,10 +19,13 @@ public class COPonderTags {
     public static void initiate(){
         PonderRegistry.TAGS.forTag(OPTICALS)
                 .add(COBlocks.OPTICAL_SOURCE)
+                .add(COBlocks.THERMAL_OPTICAL_SOURCE)
                 .add(COBlocks.LIGHT_OPTICAL_RECEPTOR)
+                .add(COBlocks.HEAVY_OPTICAL_RECEPTOR)
                 .add(COBlocks.ENCASED_MIRROR)
                 .add(COBlocks.ABSORPTION_POLARIZING_FILTER)
                 .add(COBlocks.POLARIZING_BEAM_SPLITTER_BLOCK)
-                .add(COBlocks.OPTICAL_SENSOR);
+                .add(COBlocks.OPTICAL_SENSOR)
+                .add(COBlocks.BEAM_CONDENSER);
     }
 }

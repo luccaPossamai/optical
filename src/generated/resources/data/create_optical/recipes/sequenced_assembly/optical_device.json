@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "minecraft:amethyst_shard"
   },
-  "loops": 5,
+  "loops": 3,
   "results": [
     {
       "chance": 100.0,
@@ -34,7 +34,7 @@
           "item": "create_optical:incomplete_optical_device"
         },
         {
-          "item": "minecraft:glass"
+          "item": "minecraft:glass_pane"
         }
       ],
       "results": [

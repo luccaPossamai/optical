@@ -1,0 +1,73 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create_optical:block/optical_source/optical_source_laser_beam",
+		"particle": "create_optical:block/optical_source/optical_source_laser_beam"
+	},
+	"elements": [
+		{
+			"from": [7.5, 6.793, 0],
+			"to": [8.5, 6.793, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"down": {"uv": [8, 0, 10, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [7.5, 6.793, 0],
+			"to": [8.5, 6.793, 16],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"down": {"uv": [10, 0, 12, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [9.207, 7.5, 0],
+			"to": [9.207, 8.5, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [12, 0, 14, 16], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"from": [9.207, 7.5, 0],
+			"to": [9.207, 8.5, 16],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [14, 0, 16, 16], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"from": [7.5, 9.207, 0],
+			"to": [8.5, 9.207, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"up": {"uv": [0, 0, 2, 16], "rotation": 180, "texture": "#0"}
+			}
+		},
+		{
+			"from": [7.5, 9.207, 0],
+			"to": [8.5, 9.207, 16],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"up": {"uv": [2, 0, 4, 16], "rotation": 180, "texture": "#0"}
+			}
+		},
+		{
+			"from": [6.793, 7.5, 0],
+			"to": [6.793, 8.5, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"west": {"uv": [4, 0, 6, 16], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [6.793, 7.5, 0],
+			"to": [6.793, 8.5, 16],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"west": {"uv": [6, 0, 8, 16], "rotation": 90, "texture": "#0"}
+			}
+		}
+	]
+}

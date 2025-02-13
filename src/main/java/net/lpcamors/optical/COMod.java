@@ -10,11 +10,14 @@ import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.utility.Components;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.lpcamors.optical.blocks.COBlocks;
 import net.lpcamors.optical.blocks.COBlockEntities;
+import net.lpcamors.optical.config.COConfigs;
 import net.lpcamors.optical.data.COLang;
 import net.lpcamors.optical.data.CODataGen;
 import net.lpcamors.optical.items.COItems;
+import net.lpcamors.optical.network.COPackets;
 import net.lpcamors.optical.ponder.COPonderIndex;
 import net.lpcamors.optical.ponder.COPonderTags;
 import net.lpcamors.optical.recipes.FocusingRecipeParams;
@@ -31,6 +34,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -73,6 +77,10 @@ public class COMod {
         COBlockEntities.initiate();
         CORecipeTypes.register(modEventBus);
         COLang.initiate();
+
+        COPackets.registerPackets();
+
+        COConfigs.register(ModLoadingContext.get());
 
         modEventBus.addListener(EventPriority.LOWEST, CODataGen::dataGen);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(this::clientSetup));
