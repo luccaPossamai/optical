@@ -22,6 +22,14 @@ All the crafts can be found with the JEI mod, and most of the additional mechani
 
 ![Base Profile 2024 06 02 - 01 34 16 02](https://github.com/luccaPossamai/optical/assets/110493821/b7ecf37e-feee-4f32-8e9e-2031a0f22a6d)
 
+New Receptor States
+
+![receptor](https://github.com/user-attachments/assets/1db34baf-dd84-4376-9db7-771670497b0b)
+
+Optical Device application required
+
+![receptor2](https://github.com/user-attachments/assets/643bc3c0-6e85-4350-9d8c-71625562b373)
+
 
 
 Copper Legacy Texture added:
