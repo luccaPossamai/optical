@@ -176,8 +176,9 @@ public class BeamFocuserBlockEntity extends KineticBlockEntity implements IHaveG
     }
 
 
-    public int getProcessDuration() {
-        return (int) (this.baseProcessingDuration * this.getSpeedDurationMultiplier());
+    public int getProcessDuration() {        
+        int var0 = (int)((float)this.baseProcessingDuration * this.getSpeedDurationMultiplier());
+        return Math.max(1, var0);
     }
     public float getSpeedDurationMultiplier(){
         return (288 - Math.abs(this.getSpeed()))/256F;
